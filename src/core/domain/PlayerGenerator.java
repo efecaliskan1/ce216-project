@@ -13,12 +13,12 @@ import java.util.Random;
 public class PlayerGenerator {
 
     private static final String[] FIRST = {
-        "James","Luca","Marco","Pedro","Carlos","Ali","Omar","Kai",
+        "James","Luca","Marco","Pedro","Carlos","Ali","Dzeko","Kai",
         "Noah","Leon","Finn","Emil","Enzo","Ivan","Diego","Mateo"
     };
     private static final String[] LAST = {
         "Smith","Rossi","Silva","Garcia","Müller","Yilmaz","Hassan",
-        "Kim","Santos","Fernandez","Becker","Costa","Lopez","Novak"
+        "Icardi","Santos","Fernandez","Becker","Costa","Lopez","Novak"
     };
     private static final String[] FOOTBALL_POSITIONS = {
         "Goalkeeper","Defender","Defender","Defender","Defender",
