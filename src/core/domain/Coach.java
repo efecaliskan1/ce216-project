@@ -9,6 +9,10 @@ public class Coach {
     private final String specialty;
     private final List<TrainingPlan> trainingPlans;
 
+    public Coach(String name, String specialty) {
+        this(name, specialty, Collections.<TrainingPlan>emptyList());
+    }
+
     public Coach(String name, String specialty, List<TrainingPlan> trainingPlans) {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("name cannot be blank");
@@ -20,6 +24,12 @@ public class Coach {
         this.name = name;
         this.specialty = specialty;
         this.trainingPlans = new ArrayList<>(trainingPlans == null ? Collections.<TrainingPlan>emptyList() : trainingPlans);
+    }
+
+    public void addTrainingPlan(TrainingPlan trainingPlan) {
+        if (trainingPlan != null) {
+            trainingPlans.add(trainingPlan);
+        }
     }
 
     public String getName() {
