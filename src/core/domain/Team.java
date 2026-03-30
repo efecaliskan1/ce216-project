@@ -32,8 +32,11 @@ public class Team {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("name cannot be blank");
         }
+        if (rosterRules == null) {
+            throw new IllegalArgumentException("rosterRules cannot be null");
+        }
 
-        this.rosterRules = rosterRules == null ? new RosterRules() : rosterRules;
+        this.rosterRules = rosterRules;
         List<Player> roster = new ArrayList<>(players == null ? Collections.<Player>emptyList() : players);
         if (roster.size() > this.rosterRules.getRosterSize()) {
             throw new IllegalArgumentException("player count cannot exceed roster size");
