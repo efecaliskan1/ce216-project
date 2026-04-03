@@ -7,6 +7,4 @@ public interface IUIController {
     void nextWeek();
     void showStandings();
     void showMatch(Match match);
-
-    
 }

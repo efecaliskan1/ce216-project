@@ -11,7 +11,6 @@ public interface ISport {
     IMatchSimulator createMatchSimulator();
     IStandingsCalculator createStandingsCalculator();
     List<Player> generatePlayers(Team team);
-    
     RosterRules getRosterRules();
     int getMatchPeriods();
 }

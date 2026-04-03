@@ -11,7 +11,4 @@ public interface IStandingsCalculator {
     List<StandingEntry> getStandings();
     int compareTeams(Team a, Team b);
     void setSeed(long seed);
-
-
-    
 }
