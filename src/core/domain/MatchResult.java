@@ -21,6 +21,22 @@ public final class MatchResult {
             List<MatchEvent> events,
             int weekNumber
     ) {
+        if (homeTeam == null) {
+            throw new IllegalArgumentException("homeTeam cannot be null");
+        }
+        if (awayTeam == null) {
+            throw new IllegalArgumentException("awayTeam cannot be null");
+        }
+        if (homeTeam.equals(awayTeam)) {
+            throw new IllegalArgumentException("homeTeam and awayTeam must be different");
+        }
+        if (homeScore < 0 || awayScore < 0) {
+            throw new IllegalArgumentException("scores cannot be negative");
+        }
+        if (weekNumber < 0) {
+            throw new IllegalArgumentException("weekNumber cannot be negative");
+        }
+
         this.homeScore = homeScore;
         this.awayScore = awayScore;
         this.homeTeam = homeTeam;

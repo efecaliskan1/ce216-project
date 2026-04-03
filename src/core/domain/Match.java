@@ -21,6 +21,19 @@ public class Match {
     }
 
     public Match(Team homeTeam, Team awayTeam, int weekNumber) {
+        if (homeTeam == null) {
+            throw new IllegalArgumentException("homeTeam cannot be null");
+        }
+        if (awayTeam == null) {
+            throw new IllegalArgumentException("awayTeam cannot be null");
+        }
+        if (homeTeam.equals(awayTeam)) {
+            throw new IllegalArgumentException("homeTeam and awayTeam must be different");
+        }
+        if (weekNumber < 0) {
+            throw new IllegalArgumentException("weekNumber cannot be negative");
+        }
+
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.weekNumber = weekNumber;
@@ -59,6 +72,9 @@ public class Match {
 
     public void addEvent(MatchEvent event) {
         if (event != null) {
+            if (!event.getTeam().equals(homeTeam) && !event.getTeam().equals(awayTeam)) {
+                throw new IllegalArgumentException("event team must belong to this match");
+            }
             eventLog.add(event);
         }
     }
@@ -82,7 +98,17 @@ public class Match {
     }
 
     public void setResult(MatchResult result) {
+        if (result != null) {
+            boolean sameTeams = result.getHomeTeam().equals(homeTeam) && result.getAwayTeam().equals(awayTeam);
+            if (!sameTeams) {
+                throw new IllegalArgumentException("result teams must match this match");
+            }
+            if (result.getWeekNumber() != weekNumber) {
+                throw new IllegalArgumentException("result weekNumber must match this match");
+            }
+        }
         this.result = result;
+        this.played = result != null;
     }
 
     public boolean isPlayed() {

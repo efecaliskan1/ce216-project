@@ -21,6 +21,10 @@ public class StandingEntry {
         if (result == null) {
             return;
         }
+        boolean teamInResult = result.getHomeTeam().equals(team) || result.getAwayTeam().equals(team);
+        if (!teamInResult) {
+            throw new IllegalArgumentException("result does not belong to this team");
+        }
 
         played++;
         goalsFor += result.getGoalsFor(team);
