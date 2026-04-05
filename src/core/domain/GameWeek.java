@@ -6,56 +6,31 @@ import java.util.Collections;
 import java.util.List;
 
 public class GameWeek implements Serializable {
+
     private final int weekNumber;
     private final List<Match> fixtures;
     private final List<TrainingEvent> trainingEvents;
     private boolean completed;
 
     public GameWeek(int weekNumber) {
-        if (weekNumber < 0) {
-            throw new IllegalArgumentException("weekNumber cannot be negative");
-        }
-
-        this.weekNumber = weekNumber;
-        this.fixtures = new ArrayList<>();
+        this.weekNumber     = weekNumber;
+        this.fixtures       = new ArrayList<>();
         this.trainingEvents = new ArrayList<>();
     }
 
+    /** Runs training for every coaching event registered this week. */
     public void runTraining() {
-        for (TrainingEvent trainingEvent : trainingEvents) {
-            trainingEvent.execute();
-        }
+        for (TrainingEvent e : trainingEvents) e.execute();
     }
 
-    public void addFixture(Match match) {
-        if (match != null) {
-            fixtures.add(match);
-        }
-    }
+    public void addFixture(Match match)         { fixtures.add(match); }
+    public void addTrainingEvent(TrainingEvent e){ trainingEvents.add(e); }
+    public void markCompleted()                 { completed = true; }
 
-    public void addTrainingEvent(TrainingEvent trainingEvent) {
-        if (trainingEvent != null) {
-            trainingEvents.add(trainingEvent);
-        }
-    }
+    // runMatches / applyInjuries / updateStandings removed — orchestration is in SeasonController
 
-    public void markCompleted() {
-        completed = true;
-    }
-
-    public int getWeekNumber() {
-        return weekNumber;
-    }
-
-    public List<Match> getFixtures() {
-        return Collections.unmodifiableList(fixtures);
-    }
-
-    public List<TrainingEvent> getTrainingEvents() {
-        return Collections.unmodifiableList(trainingEvents);
-    }
-
-    public boolean isCompleted() {
-        return completed;
-    }
+    public int              getWeekNumber()     { return weekNumber; }
+    public List<Match>      getFixtures()       { return Collections.unmodifiableList(fixtures); }
+    public List<TrainingEvent> getTrainingEvents(){ return Collections.unmodifiableList(trainingEvents); }
+    public boolean          isCompleted()       { return completed; }
 }

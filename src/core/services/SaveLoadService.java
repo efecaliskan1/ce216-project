@@ -5,39 +5,32 @@ import interfaces.ISport;
 import sports.football.FootballSport;
 import sports.volleyball.VolleyballSport;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class SaveLoadService {
-    private static final String SAVE_DIR = "saves/";
+
+    private static final String SAVE_DIR    = "saves/";
     private static final String SAVE_PREFIX = "slot_";
-    private static final String SAVE_EXT = ".ser";
+    private static final String SAVE_EXT    = ".ser";
 
     public SaveLoadService() {
-        try {
-            Files.createDirectories(Paths.get(SAVE_DIR));
-        } catch (IOException exception) {
-            System.err.println("Could not create saves dir: " + exception.getMessage());
-        }
+        try { Files.createDirectories(Paths.get(SAVE_DIR)); }
+        catch (IOException e) { System.err.println("Could not create saves dir: " + e.getMessage()); }
     }
 
     public void save(Season season, int slot) throws IOException {
-        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(
+        try (ObjectOutputStream oos = new ObjectOutputStream(
                 new FileOutputStream(SAVE_DIR + SAVE_PREFIX + slot + SAVE_EXT))) {
-            objectOutputStream.writeObject(season);
+            oos.writeObject(season);
         }
     }
 
     public Season load(int slot) throws IOException, ClassNotFoundException {
-        try (ObjectInputStream objectInputStream = new ObjectInputStream(
+        try (ObjectInputStream ois = new ObjectInputStream(
                 new FileInputStream(SAVE_DIR + SAVE_PREFIX + slot + SAVE_EXT))) {
-            return (Season) objectInputStream.readObject();
+            return (Season) ois.readObject();
         }
     }
 
@@ -46,17 +39,10 @@ public class SaveLoadService {
     }
 
     public ISport resolveSport(String sportName) {
-        if (sportName == null) {
-            throw new IllegalArgumentException("sportName cannot be null");
-        }
-
         switch (sportName.toLowerCase()) {
-            case "football":
-                return new FootballSport();
-            case "volleyball":
-                return new VolleyballSport();
-            default:
-                throw new IllegalArgumentException("Unknown sport: " + sportName);
+            case "football":   return new FootballSport();
+            case "volleyball": return new VolleyballSport();
+            default: throw new IllegalArgumentException("Unknown sport: " + sportName);
         }
     }
 }

@@ -1,10 +1,4 @@
-import core.domain.Coach;
-import core.domain.GameWeek;
-import core.domain.Match;
-import core.domain.Player;
-import core.domain.Team;
-import core.domain.TrainingEvent;
-import core.domain.TrainingPlan;
+import core.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,11 +27,8 @@ public class GameWeekFlowTest {
         coach = new Coach("Coach A", "passing");
         coach.addTrainingPlan(new TrainingPlan("passing", 5));
 
-        TrainingEvent te = new TrainingEvent(
-                coach,
-                List.of(healthyPlayer, injuredPlayer),
-                coach.getTrainingPlans().get(0)
-        );
+        TrainingEvent te = new TrainingEvent(coach, List.of(healthyPlayer, injuredPlayer),
+                coach.getTrainingPlans().get(0));
         gw.addTrainingEvent(te);
     }
 

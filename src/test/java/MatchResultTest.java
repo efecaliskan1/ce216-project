@@ -10,8 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MatchResultTest {
 
-    private Team home;
-    private Team away;
+    private Team home, away;
 
     @BeforeEach
     void setUp() {

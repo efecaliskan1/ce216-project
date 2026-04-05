@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import valueobjects.RosterRules;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,9 +19,8 @@ public class FixtureGeneratorTest {
     @BeforeEach
     void setUp() {
         league = new League("Test League");
-        for (int i = 1; i <= 16; i++) {
+        for (int i = 1; i <= 16; i++)
             league.addTeam(new Team("Team" + i, "logo.png", RosterRules.defaults()));
-        }
     }
 
     @Test
@@ -34,8 +34,8 @@ public class FixtureGeneratorTest {
         new FixtureGenerator().generate(league);
         for (Team t : league.getTeams()) {
             long count = league.getFixtures().stream()
-                    .filter(m -> m.getHomeTeam().equals(t) || m.getAwayTeam().equals(t))
-                    .count();
+                .filter(m -> m.getHomeTeam().equals(t) || m.getAwayTeam().equals(t))
+                .count();
             assertEquals(30, count, t.getName() + " should play 30 matches");
         }
     }
@@ -48,9 +48,7 @@ public class FixtureGeneratorTest {
             final int week = w;
             Set<Team> seen = new HashSet<>();
             for (Match m : league.getFixtures()) {
-                if (m.getWeekNumber() != week) {
-                    continue;
-                }
+                if (m.getWeekNumber() != week) continue;
                 assertTrue(seen.add(m.getHomeTeam()));
                 assertTrue(seen.add(m.getAwayTeam()));
             }

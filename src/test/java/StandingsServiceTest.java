@@ -2,9 +2,9 @@ import core.domain.MatchResult;
 import core.domain.StandingEntry;
 import core.domain.Team;
 import core.services.StandingsService;
+import sports.football.FootballStandingsCalculator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import sports.football.FootballStandingsCalculator;
 import valueobjects.RosterRules;
 
 import java.util.List;
@@ -15,21 +15,21 @@ public class StandingsServiceTest {
 
     private StandingsService service;
     private FootballStandingsCalculator calc;
-    private Team teamA;
-    private Team teamB;
+    private Team teamA, teamB;
 
     @BeforeEach
     void setUp() {
-        calc = new FootballStandingsCalculator();
+        calc    = new FootballStandingsCalculator();
         service = new StandingsService(calc);
-        teamA = new Team("Team A", "a.png", RosterRules.defaults());
-        teamB = new Team("Team B", "b.png", RosterRules.defaults());
+        teamA   = new Team("Team A", "a.png", RosterRules.defaults());
+        teamB   = new Team("Team B", "b.png", RosterRules.defaults());
     }
 
     @Test
     void processResult_delegatesToCalculator() {
         MatchResult mr = new MatchResult(2, 1, teamA, teamB, List.of(), 0);
         service.processResult(mr);
+        // calculator should now have entries
         List<StandingEntry> table = service.getTable();
         assertFalse(table.isEmpty());
     }

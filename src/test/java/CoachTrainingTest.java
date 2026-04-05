@@ -3,7 +3,6 @@ import core.domain.Player;
 import core.domain.TrainingPlan;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CoachTrainingTest {
@@ -43,6 +42,7 @@ public class CoachTrainingTest {
     void trainPlayers_differentSpecialty_noEffect() {
         Player p = new Player("P", "Defender", 25, 5);
         p.setAttribute("finishing", 50);
+        // coach specialty is "passing", plan targets "passing" — "finishing" unchanged
         int before = p.getAttribute("finishing");
         coach.trainPlayers(java.util.List.of(p));
         assertEquals(before, p.getAttribute("finishing"));

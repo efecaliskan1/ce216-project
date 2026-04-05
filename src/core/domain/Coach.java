@@ -1,64 +1,34 @@
 package core.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class Coach {
-    private final String name;
-    private final String specialty;
-    private final List<TrainingPlan> trainingPlans;
+public class Coach implements Serializable {
+    private String name;
+    private String specialty;
+    private List<TrainingPlan> trainingPlans;
 
     public Coach(String name, String specialty) {
-        this(name, specialty, Collections.<TrainingPlan>emptyList());
+        this.name         = name;
+        this.specialty    = specialty;
+        this.trainingPlans = new ArrayList<>();
     }
 
-    public Coach(String name, String specialty, List<TrainingPlan> trainingPlans) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("name cannot be blank");
-        }
-        if (specialty == null || specialty.trim().isEmpty()) {
-            throw new IllegalArgumentException("specialty cannot be blank");
-        }
-
-        this.name = name;
-        this.specialty = specialty;
-        this.trainingPlans = new ArrayList<>(trainingPlans == null ? Collections.<TrainingPlan>emptyList() : trainingPlans);
-    }
-
-    public void addTrainingPlan(TrainingPlan trainingPlan) {
-        if (trainingPlan != null) {
-            trainingPlans.add(trainingPlan);
-        }
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getSpecialty() {
-        return specialty;
-    }
-
-    public List<TrainingPlan> getTrainingPlans() {
-        return Collections.unmodifiableList(trainingPlans);
+    public void addTrainingPlan(TrainingPlan plan) {
+        trainingPlans.add(plan);
     }
 
     public void trainPlayers(List<Player> players) {
-        if (players == null || players.isEmpty()) {
-            return;
-        }
-
-        for (Player player : players) {
-            if (player == null || !player.isAvailable()) {
-                continue;
-            }
-
-            for (TrainingPlan plan : trainingPlans) {
-                if (specialty.equalsIgnoreCase(plan.getTargetAttribute())) {
-                    player.train(plan);
-                }
+        for (TrainingPlan plan : trainingPlans) {
+            if (!plan.getTargetAttribute().equals(specialty)) continue;
+            for (Player p : players) {
+                if (p.isAvailable()) p.train(plan);
             }
         }
     }
+
+    public String getName()                       { return name; }
+    public String getSpecialty()                  { return specialty; }
+    public List<TrainingPlan> getTrainingPlans()  { return trainingPlans; }
 }

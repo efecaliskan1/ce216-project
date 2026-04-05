@@ -2,7 +2,6 @@ import core.domain.Player;
 import core.domain.TrainingPlan;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerTest {
@@ -10,9 +9,7 @@ public class PlayerTest {
     private Player player;
 
     @BeforeEach
-    void setUp() {
-        player = new Player("Ali Yılmaz", "Midfielder", 25, 10);
-    }
+    void setUp() { player = new Player("Ali Yılmaz", "Midfielder", 25, 10); }
 
     @Test
     void applyInjury_setsUnavailableAndCorrectGames() {
@@ -44,7 +41,7 @@ public class PlayerTest {
     void decrementInjury_atZero_doesNotThrow() {
         player.applyInjury(1);
         player.decrementInjury();
-        assertDoesNotThrow(player::decrementInjury);
+        assertDoesNotThrow(() -> player.decrementInjury());
         assertTrue(player.isAvailable());
     }
 
@@ -59,9 +56,9 @@ public class PlayerTest {
     @Test
     void fatigue_increasesAndDecreases_withinBounds() {
         player.increaseFatigue(80);
-        player.increaseFatigue(50);
+        player.increaseFatigue(50); // would be 130, capped at 100
         assertEquals(100, player.getFatigueLevel());
-        player.recoverFatigue(200);
+        player.recoverFatigue(200); // would be -100, capped at 0
         assertEquals(0, player.getFatigueLevel());
     }
 }

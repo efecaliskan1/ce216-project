@@ -1,30 +1,17 @@
 package core.domain;
 
-public class TrainingPlan {
+import java.io.Serializable;
+
+public class TrainingPlan implements Serializable {
     private final String targetAttribute;
-    private final int intensity;
+    private final int intensity; // 1-10
 
     public TrainingPlan(String targetAttribute, int intensity) {
-        if (targetAttribute == null || targetAttribute.trim().isEmpty()) {
-            throw new IllegalArgumentException("targetAttribute cannot be blank");
-        }
-        if (intensity < 1 || intensity > 10) {
-            throw new IllegalArgumentException("intensity must be between 1 and 10");
-        }
-
         this.targetAttribute = targetAttribute;
-        this.intensity = intensity;
+        this.intensity = Math.max(1, Math.min(10, intensity));
     }
 
-    public String getTargetAttribute() {
-        return targetAttribute;
-    }
-
-    public int getIntensity() {
-        return intensity;
-    }
-
-    public int getAttributeGain() {
-        return intensity;
-    }
+    public int    getAttributeGain()    { return intensity; }
+    public String getTargetAttribute()  { return targetAttribute; }
+    public int    getIntensity()        { return intensity; }
 }
