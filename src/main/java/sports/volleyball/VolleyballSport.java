@@ -42,9 +42,9 @@ public class VolleyballSport extends AbstractSport {
     }
 
     @Override public IMatchSimulator      createMatchSimulator()      {
-        throw new UnsupportedOperationException("VolleyballMatchSimulator — M3 deliverable");
+        return new VolleyballMatchSimulator();
     }
     @Override public IStandingsCalculator createStandingsCalculator() {
-        throw new UnsupportedOperationException("VolleyballStandingsCalculator — M3 deliverable");
+        return new VolleyballStandingsCalculator();
     }
 }
