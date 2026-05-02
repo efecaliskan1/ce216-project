@@ -60,4 +60,47 @@ public class SeasonControllerTest {
         controller.nextWeek();
         assertTrue(p.getInjuredGamesRemaining() < 5 || !p.isInjured());
     }
+
+    @Test
+    void startNextSeason_keepsOverallAndAgesPlayersByOne() {
+        controller.startSeason("football");
+        Team managed = controller.getSeason().getLeague().getTeams().get(0);
+        controller.setUserTeam(managed);
+        Player player = managed.getPlayers().get(0);
+        int ageBefore = player.getAge();
+        int overallBefore = player.getOverall();
+
+        controller.startNextSeason();
+
+        assertEquals(2, controller.getSeason().getSeasonNumber());
+        assertEquals(0, controller.getSeason().getCurrentWeek());
+        assertEquals(overallBefore, player.getOverall());
+        assertEquals(ageBefore + 1, player.getAge());
+        assertSame(managed, controller.getSeason().getUserTeam());
+    }
+
+    @Test
+    void nextWeek_grantsOneTrainingSession() {
+        controller.startSeason("football");
+        assertEquals(0, controller.getAvailableTrainingSessions());
+
+        controller.nextWeek();
+
+        assertEquals(1, controller.getAvailableTrainingSessions());
+    }
+
+    @Test
+    void useTrainingSession_onlyWorksForManagedTeamAndConsumesOne() {
+        controller.startSeason("football");
+        Team managed = controller.getSeason().getLeague().getTeams().get(0);
+        controller.setUserTeam(managed);
+        controller.nextWeek();
+
+        Player player = managed.getPlayers().get(0);
+        int before = player.getAttribute(managed.getCoach().getSpecialty());
+
+        assertTrue(controller.useTrainingSession(managed));
+        assertEquals(0, controller.getAvailableTrainingSessions());
+        assertTrue(player.getAttribute(managed.getCoach().getSpecialty()) >= before);
+    }
 }

@@ -1,21 +1,69 @@
-#Sport Management System (BugYani)
+# Sport Management System
 
-This project is a Java-based manager simulation framework designed for the CE216 course. The system allows users to manage sports teams, handle rosters, and simulate league seasons across different sports through a modular architecture
+A tactical sports-management game inspired by Football Manager / Championship Manager, built for CE216 at IUE. Supports **Football** and **Volleyball** through a plug-in sport architecture.
 
-#Overview
+## Team
 
-The program functions as a sports management engine where the core logic is decoupled from specific sport rules. It supports features such as:Multi-Sport Support: Capable of running Football, Volleyball, or other custom sports using the same underlying framework.League Management: Handles fixtures, standings, and weekly game loops including training and match days.Team Operations: Users can manage players, coaches, and tactics while dealing with real-time factors like injuries and fatigue.Simulation: Provides a match engine that simulates results based on player attributes and chosen strategies
+- Kutluay Aydın
+- Arda Korkmaz
+- Efe Çalışkan
+- Toprak Ege Gündoğan
 
-#Technical Stack
+## Quick start
 
-Language: Java.UI Framework: JavaFX with FXML for a modern MVC separation.Architecture: Interface-driven design following Dependency Inversion principles.
+```bash
+# Run the CLI demo (football + volleyball + save/load)
+mvn exec:java -Dexec.mainClass=core.app.Main
 
-#Team Members
+# Run the JavaFX UI
+mvn javafx:run
 
-Kutluay Aydın
+# Run all tests (26 test classes, 126 tests)
+mvn test
+```
 
-Arda Korkmaz
+## Building a Windows installer
 
-Efe Çalışkan
+Requires JDK 17+ with `jpackage`:
 
-Toprak Ege Güldoğan
+```bash
+build-installer.bat
+```
+
+The resulting `.msi` lands in `dist/`.
+
+## Project structure
+
+```
+src/main/java/
+  interfaces/        # ISport, IMatchSimulator, IStandingsCalculator, ...
+  abstracts/         # AbstractSport, AbstractMatchSimulator, ...
+  core/
+    domain/          # Player, Team, League, Match, Season, ...
+    services/        # FixtureGenerator, StandingsService, SaveLoadService, NameDataService
+    app/             # Main, SeasonController, SportFactory, MatchCoordinator
+  sports/
+    football/        # FootballSport, FootballMatchSimulator, FootballStandingsCalculator
+    volleyball/      # VolleyballSport, VolleyballMatchSimulator, VolleyballStandingsCalculator
+  tactics/           # Defensive, Balanced, HighPress, CounterAttack, TacticFactory
+  valueobjects/      # RosterRules, ScoringConfig, TacticResult, PeriodResult
+  observer/          # UIMatchObserver
+  ui/                # JavaFX application and views
+    views/           # Start, Main, Overview, Standings, Fixtures, Squad, MatchDay
+src/main/resources/
+  data/              # Name & team-name pools (CSV)
+  styles/            # JavaFX CSS (main.css)
+```
+
+## OO principles applied
+
+- **Dependency Inversion** – controllers and UI depend on `ISport`, never on `FootballSport` / `VolleyballSport`.
+- **Open/Closed** – new sports register through `SportFactory.register()`; no existing code changes.
+- **Strategy** – `ITacticStrategy` with four interchangeable tactics; `TacticFactory` resolves by name.
+- **Template Method** – `AbstractMatchSimulator.simulate()` drives the match flow; sports only implement `simulatePeriod()`.
+- **Observer** – `MatchObserver` receives live match events; both UI and stats collectors plug in.
+- **Factory** – `SportFactory` uses a `Map<String, Supplier<ISport>>` registry.
+
+## Save / Load
+
+All domain classes are `Serializable`. `SaveLoadService` writes the whole `Season` object graph to `saves/slot_N.ser`. Loading creates a ready-to-use `SeasonController` state.

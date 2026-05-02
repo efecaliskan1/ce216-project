@@ -61,4 +61,24 @@ public class PlayerTest {
         player.recoverFatigue(200); // would be -100, capped at 0
         assertEquals(0, player.getFatigueLevel());
     }
+
+    @Test
+    void trainingTenPoints_increasesOverallByOne_whenAge32OrBelow() {
+        player.setOverall(74);
+        player.train(new TrainingPlan("passing", 5));
+        player.train(new TrainingPlan("passing", 5));
+
+        assertEquals(75, player.getOverall());
+        assertEquals(0, player.getOverallTrainingProgress());
+    }
+
+    @Test
+    void trainingDoesNotIncreaseOverall_whenOlderThan32() {
+        Player veteran = new Player("Veteran", "Midfielder", 33, 11);
+        veteran.setOverall(78);
+        veteran.train(new TrainingPlan("passing", 10));
+
+        assertEquals(78, veteran.getOverall());
+        assertEquals(0, veteran.getOverallTrainingProgress());
+    }
 }

@@ -58,13 +58,13 @@ public class TacticTest {
     @Test
     void applyCurrentTactics_homeAppliedTactic_notNull() {
         match.applyCurrentTactics();
-        assertNotNull(match.homeAppliedTactic);
+        assertNotNull(match.getHomeAppliedTactic());
     }
 
     @Test
     void applyCurrentTactics_awayAppliedTactic_notNull() {
         match.applyCurrentTactics();
-        assertNotNull(match.awayAppliedTactic);
+        assertNotNull(match.getAwayAppliedTactic());
     }
 
     @Test

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sport Management System — User Manual</title>
+<style>
+  body { font-family: "Segoe UI", sans-serif; max-width: 780px; margin: 40px auto; padding: 0 24px; color: #1f2937; line-height: 1.6; }
+  h1 { font-size: 32px; letter-spacing: -0.5px; margin-bottom: 4px; }
+  h2 { font-size: 20px; margin-top: 32px; color: #b45309; border-bottom: 2px solid #fbbf24; padding-bottom: 6px; }
+  h3 { font-size: 15px; margin-top: 20px; color: #374151; }
+  .subtitle { color: #6b7280; margin-top: 0; }
+  code, kbd { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 90%; }
+  .box { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 12px 16px; margin: 16px 0; border-radius: 4px; }
+  .toc { background: #f9fafb; padding: 16px 24px; border-radius: 6px; }
+  .toc a { color: #b45309; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  ul { padding-left: 22px; }
+  li { margin: 4px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+  th, td { border: 1px solid #e5e7eb; padding: 8px 12px; text-align: left; font-size: 14px; }
+  th { background: #f9fafb; }
+</style>
+</head>
+<body>
+
+<h1>Sport Management System</h1>
+<p class="subtitle">User manual · Version 3.0</p>
+
+<div class="toc">
+  <strong>Contents</strong>
+  <ul>
+    <li><a href="#intro">1. Introduction</a></li>
+    <li><a href="#install">2. Installation</a></li>
+    <li><a href="#start">3. Starting a new season</a></li>
+    <li><a href="#ui">4. The interface</a></li>
+    <li><a href="#matchday">5. Match day</a></li>
+    <li><a href="#tactics">6. Tactics &amp; training</a></li>
+    <li><a href="#save">7. Saving and loading</a></li>
+    <li><a href="#rules">8. Sport rules</a></li>
+    <li><a href="#tips">9. Tips</a></li>
+  </ul>
+</div>
+
+<h2 id="intro">1. Introduction</h2>
+<p>Sport Management System is a tactical manager game in the tradition of Football Manager and Championship Manager. You pick a sport, inherit a league of 16 randomly generated teams, and guide one of them through a full double round-robin season. Matches are simulated based on your players' attributes, the tactic you pick, and a little luck.</p>
+
+<h2 id="install">2. Installation</h2>
+<p>Run the provided <code>SportManager-3.0.0.msi</code> installer on Windows. The installer creates a Start menu shortcut and an optional desktop icon. No Java installation is bundled; the app expects a JRE 17+ already present on the machine, as specified by the course requirements.</p>
+<div class="box">If you are running from source instead of the installer, see <code>README.md</code> for the Maven commands.</div>
+
+<h2 id="start">3. Starting a new season</h2>
+<p>From the welcome screen:</p>
+<ol>
+  <li>Pick <strong>Football</strong> or <strong>Volleyball</strong> from the dropdown.</li>
+  <li>Click <em>Start new season</em>.</li>
+  <li>The app generates 16 teams, each with a full roster, a head coach, and a starting tactic.</li>
+</ol>
+<p>To continue a saved career, pick a slot in the <em>Continue a saved game</em> section and click <em>Load</em>.</p>
+
+<h2 id="ui">4. The interface</h2>
+<p>The main window has a sidebar on the left and a content area on the right. The sidebar sections are:</p>
+<table>
+  <tr><th>Section</th><th>What it shows</th></tr>
+  <tr><td>Overview</td><td>Season summary, top of the table, next fixtures.</td></tr>
+  <tr><td>League Table</td><td>Full standings with all statistics.</td></tr>
+  <tr><td>Fixtures</td><td>Every match of every week, color-coded by status.</td></tr>
+  <tr><td>My Squad</td><td>Inspect any team's roster, coach, and tactic.</td></tr>
+  <tr><td>Match Day</td><td>Simulate the current week's fixtures.</td></tr>
+</table>
+
+<h2 id="matchday">5. Match day</h2>
+<p>Click <strong>Match Day</strong> from the sidebar. The upcoming fixtures are listed. Before pressing <em>Simulate week</em>, visit <em>My Squad</em> and set the tactic for each team you care about. Click <em>Simulate week</em> to advance. Results appear in the same list, and the league table and fixtures views update automatically.</p>
+<div class="box">Injuries and fatigue accumulate automatically. Injured players are listed in <em>My Squad</em> with the number of games they will miss.</div>
+
+<h2 id="tactics">6. Tactics &amp; training</h2>
+<p>Four tactics are available for every team:</p>
+<ul>
+  <li><strong>Defensive</strong> – low pressure, narrow width. Less fatigue, fewer goals for and against.</li>
+  <li><strong>Balanced</strong> – the default. Neutral on every axis.</li>
+  <li><strong>High press</strong> – high pressure, wide shape. More goals, more fatigue.</li>
+  <li><strong>Counter-attack</strong> – low pressure, wide shape. Punishes opponents who overcommit.</li>
+</ul>
+<p>Every team also has a coach with a specialty (for example <em>finishing</em> or <em>spiking</em>). During each match week the coach runs training sessions that improve the relevant attribute for available (non-injured) players.</p>
+
+<h2 id="save">7. Saving and loading</h2>
+<p>Use the sidebar's <strong>Save game</strong> button. Pick a slot from 1 to 5; the app stores your whole season to <code>saves/slot_N.ser</code>. To load a save, use the <strong>Load game</strong> button and pick an existing slot.</p>
+<div class="box">Saves are written as Java object serialization. Do not edit these files by hand.</div>
+
+<h2 id="rules">8. Sport rules</h2>
+<h3>Football</h3>
+<ul>
+  <li>Roster 18 (11 starters + 7 bench), 3 substitutions per match.</li>
+  <li>Two 45-minute halves. Points: W = 3, D = 1, L = 0.</li>
+  <li>Tiebreakers: points → head-to-head → goal difference → goals for.</li>
+</ul>
+<h3>Volleyball</h3>
+<ul>
+  <li>Roster 12 (6 starters + 6 bench), unlimited substitutions.</li>
+  <li>Best of 5 sets. Sets 1-4 played to 25 points, set 5 played to 15. Win a set by 2.</li>
+  <li>Points: 3-0 or 3-1 winner gets 3, 3-2 winner gets 2 and loser gets 1.</li>
+  <li>Tiebreakers: points → wins → set ratio → head-to-head.</li>
+</ul>
+
+<h2 id="tips">9. Tips</h2>
+<ul>
+  <li>Rotate your tactic based on fatigue. High press is devastating early but burns out your squad.</li>
+  <li>Use the Squad screen to spot players whose fatigue is over 70 and plan around them.</li>
+  <li>Save before each match week — if a season goes off the rails, you can revert.</li>
+</ul>
+
+<p style="margin-top: 40px; color: #6b7280; font-size: 12px; border-top: 1px solid #e5e7eb; padding-top: 16px;">
+Sport Management System · CE216 Term Project · Kutluay, Arda, Efe, Toprak
+</p>
+
+</body>
+</html>

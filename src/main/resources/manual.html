@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sport Manager — User Manual</title>
+<style>
+body { font-family: "Segoe UI", sans-serif; max-width: 780px; margin: 40px auto; padding: 0 20px; color: #1a1a1a; line-height: 1.6; }
+h1 { font-size: 28px; border-bottom: 3px solid #f59e0b; padding-bottom: 8px; }
+h2 { font-size: 20px; color: #b45309; margin-top: 32px; }
+h3 { font-size: 15px; color: #555; }
+code, kbd { background: #f2f2f2; padding: 2px 6px; border-radius: 4px; font-family: Consolas, monospace; }
+.note { background: #fff7ed; border-left: 4px solid #f59e0b; padding: 10px 14px; margin: 16px 0; }
+ul li { margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<h1>Sport Management System — User Manual</h1>
+<p><em>Version 3.0.0 · Bugyani Team</em></p>
+
+<h2>1. Getting started</h2>
+<p>
+After installation, launch the app from the Start Menu (Windows) or Applications folder.
+You will be greeted by the start screen where you can either begin a new career or
+load a previously saved game.
+</p>
+<h3>Starting a new career</h3>
+<ol>
+  <li>Choose a sport from the dropdown: <strong>Football</strong> or <strong>Volleyball</strong>.</li>
+  <li>Click <em>Start new season →</em>. A league of 16 teams is generated with randomized rosters, coaches and tactics.</li>
+</ol>
+
+<h3>Loading a saved game</h3>
+<p>
+If any save slots exist, pick one from the <em>Continue a saved game</em> combo box and click <em>Load slot</em>.
+Save files live in <code>saves/</code> next to the application.
+</p>
+
+<h2>2. The main window</h2>
+<p>The left sidebar has five views:</p>
+<ul>
+  <li><strong>Overview</strong> — headline stats, next week's fixtures, top of the table.</li>
+  <li><strong>Standings</strong> — full league table. Columns switch between GF/GA/GD (football) and SF/SA/SD (volleyball).</li>
+  <li><strong>Fixtures</strong> — every game week, collapsible, with played scores highlighted.</li>
+  <li><strong>Teams</strong> — browse every club, see squad, change tactics.</li>
+  <li><strong>Match Day</strong> — simulate the current week and watch the event feed live.</li>
+</ul>
+
+<h2>3. Running a season</h2>
+<p>
+A season consists of a double round-robin: every team plays every other team twice, home and away.
+Each week the app runs training, recovers fatigue, plays all scheduled matches,
+applies any new injuries and then updates the standings.
+</p>
+
+<div class="note">
+  <strong>Tip:</strong> You can change a team's tactic from the <em>Teams</em> view at any point
+  between matches. Tactics affect both match outcomes and how fatigued your players get.
+</div>
+
+<h3>Tactics</h3>
+<ul>
+  <li><strong>Balanced</strong> — neutral choice, moderate fatigue.</li>
+  <li><strong>Defensive</strong> — lower scoring but less fatigue.</li>
+  <li><strong>High press</strong> — more events, high fatigue cost.</li>
+  <li><strong>Counter attack</strong> — reactive, rewards speed.</li>
+</ul>
+
+<h2>4. Saving and loading</h2>
+<p>
+From the sidebar, use <em>💾 Save</em> to write the current season to one of five slots,
+and <em>📂 Load</em> to restore any existing slot. Save files are Java serialized objects
+and are fully self-contained — teams, fixtures, standings and player fatigue are all preserved.
+</p>
+
+<h2>5. Sport rules in brief</h2>
+<h3>Football</h3>
+<ul>
+  <li>11-a-side, roster of 18, 7 on the bench, max 3 subs per match.</li>
+  <li>Two halves, 45 minutes each.</li>
+  <li>Win = 3 pts, draw = 1 pt, loss = 0 pt.</li>
+  <li>Tiebreak: head-to-head → goal difference → goals for → coin toss.</li>
+</ul>
+
+<h3>Volleyball</h3>
+<ul>
+  <li>6-a-side, roster of 12, 6 on the bench, subs unlimited.</li>
+  <li>Best of 5 sets. Sets 1–4 first to 25, 5th set first to 15, always win by 2.</li>
+  <li>3–0 / 3–1 win: winner 3 pts, loser 0. 3–2 win: winner 2 pts, loser 1.</li>
+  <li>Tiebreak: wins → set ratio → head-to-head → coin toss. No draws.</li>
+</ul>
+
+<h2>6. Troubleshooting</h2>
+<ul>
+  <li>If the app will not start, make sure Java 17+ is installed.</li>
+  <li>If saves disappear, check that the app has write permission to its working directory.</li>
+  <li>Report bugs by opening an issue on the project's GitHub page.</li>
+</ul>
+
+<hr>
+<p style="color:#888;font-size:12px;">© Bugyani Team · CE216 Project</p>
+
+</body>
+</html>

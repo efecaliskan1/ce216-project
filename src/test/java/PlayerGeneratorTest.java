@@ -9,7 +9,9 @@ import valueobjects.RosterRules;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -60,5 +62,45 @@ public class PlayerGeneratorTest {
         assertNotNull(coach);
         assertNotNull(coach.getSpecialty());
         assertFalse(coach.getSpecialty().isBlank());
+    }
+
+    @Test
+    void footballRoster_hasRequestedPositionDistribution() {
+        List<Player> players = PlayerGenerator.generateForSport(sport, team);
+        Map<String, Long> counts = players.stream()
+                .collect(Collectors.groupingBy(Player::getPosition, Collectors.counting()));
+
+        assertEquals(3L, counts.getOrDefault("Goalkeeper", 0L));
+        assertEquals(8L, counts.getOrDefault("Defender", 0L));
+        assertEquals(8L, counts.getOrDefault("Midfielder", 0L));
+        assertEquals(6L, counts.getOrDefault("Striker", 0L));
+    }
+
+    @Test
+    void generateTeams_buildsFootballLineupAsOneFourFourTwoAndBenchCoverage() {
+        Team generated = PlayerGenerator.generateTeams(sport, List.of("Alpha FC")).get(0);
+
+        Map<String, Long> starterCounts = generated.getStartingLineup().stream()
+                .collect(Collectors.groupingBy(Player::getPosition, Collectors.counting()));
+        Map<String, Long> benchCounts = generated.getBench().stream()
+                .collect(Collectors.groupingBy(Player::getPosition, Collectors.counting()));
+
+        assertEquals(1L, starterCounts.getOrDefault("Goalkeeper", 0L));
+        assertEquals(4L, starterCounts.getOrDefault("Defender", 0L));
+        assertEquals(4L, starterCounts.getOrDefault("Midfielder", 0L));
+        assertEquals(2L, starterCounts.getOrDefault("Striker", 0L));
+
+        assertTrue(benchCounts.getOrDefault("Goalkeeper", 0L) >= 2L);
+        assertTrue(benchCounts.getOrDefault("Defender", 0L) >= 2L);
+        assertTrue(benchCounts.getOrDefault("Midfielder", 0L) >= 2L);
+        assertTrue(benchCounts.getOrDefault("Striker", 0L) >= 2L);
+    }
+
+    @Test
+    void generatedPlayers_haveOverallBetween60And90() {
+        List<Player> players = PlayerGenerator.generateForSport(sport, team);
+        for (Player player : players) {
+            assertTrue(player.getOverall() >= 60 && player.getOverall() <= 90);
+        }
     }
 }
