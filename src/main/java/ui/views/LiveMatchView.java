@@ -54,21 +54,18 @@ public class LiveMatchView {
         bp.setStyle("-fx-background-color: #f3f4f6;");
         bp.setPadding(new Insets(20, 28, 20, 28));
 
-        // Top: scoreboard
+     
         bp.setTop(buildScoreboard());
 
-        // Center: event log
+      
         bp.setCenter(buildEventArea());
 
-        // Bottom: control bar
+        
         bp.setBottom(buildControls());
 
         return bp;
     }
 
-    // ──────────────────────────────────────────────────────────────
-    // Scoreboard (big home logo / score / vs / score / away logo)
-    // ──────────────────────────────────────────────────────────────
     private VBox buildScoreboard() {
         VBox board = new VBox(8);
         board.setAlignment(Pos.CENTER);
@@ -129,9 +126,7 @@ public class LiveMatchView {
         return l;
     }
 
-    // ──────────────────────────────────────────────────────────────
-    // Event log
-    // ──────────────────────────────────────────────────────────────
+  
     private VBox buildEventArea() {
         VBox card = new VBox(10);
         card.getStyleClass().add("card");
@@ -150,9 +145,7 @@ public class LiveMatchView {
         return card;
     }
 
-    // ──────────────────────────────────────────────────────────────
-    // Control bar
-    // ──────────────────────────────────────────────────────────────
+
     private VBox buildControls() {
         VBox wrap = new VBox(10);
         wrap.setPadding(new Insets(14, 0, 0, 0));
@@ -257,9 +250,7 @@ public class LiveMatchView {
         }
     }
 
-    // ──────────────────────────────────────────────────────────────
-    // Dialogs
-    // ──────────────────────────────────────────────────────────────
+   
     private void openSubDialog(Team team) {
         SubstitutionDialog dlg = new SubstitutionDialog(team, ctrl);
         dlg.showAndWait().ifPresent(pair -> {
@@ -311,9 +302,6 @@ public class LiveMatchView {
         return app.getController().getSport().getName().equalsIgnoreCase("Volleyball");
     }
 
-    // ──────────────────────────────────────────────────────────────
-    // Controller wiring
-    // ──────────────────────────────────────────────────────────────
     private void wireController() {
         ctrl.setOnEvent(this::renderEvent);
         ctrl.setOnStateChange(s -> Platform.runLater(() -> updateUIForState(s)));
