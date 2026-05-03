@@ -21,7 +21,6 @@ public abstract class AbstractMatchSimulator implements IMatchSimulator {
             TacticResult homeApplied, TacticResult awayApplied,
             int period);
 
-    /** Fires the right observer method; null-safe. */
     public void fireEvent(MatchEvent event) {
         if (observer == null) return;
         switch (event.getType()) {
@@ -32,9 +31,8 @@ public abstract class AbstractMatchSimulator implements IMatchSimulator {
         }
     }
 
-    /** injury chance = 2% base + up to 8% from fatigue */
     public boolean rollInjury(Player p) {
-        double chance = 0.02 + (p.getFatigueLevel() / 100.0) * 0.08;
+        double chance = 0.01 + (p.getFatigueLevel() / 100.0) * 0.04;
         return random.nextDouble() < chance;
     }
 }
