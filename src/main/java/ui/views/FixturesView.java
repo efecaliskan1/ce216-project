@@ -78,7 +78,6 @@ public class FixturesView {
         row.setPadding(new Insets(8, 12, 8, 12));
         row.setStyle("-fx-background-color: transparent;");
 
-        // Home team — name on the LEFT, right-aligned, then logo
         Label homeName = new Label(m.getHomeTeam().getName());
         homeName.setStyle("-fx-text-fill: #111827; -fx-font-size: 13px; -fx-font-weight: 500;");
         homeName.setMaxWidth(Double.MAX_VALUE);
@@ -87,7 +86,7 @@ public class FixturesView {
 
         var homeLogo = TeamLogoFactory.create(m.getHomeTeam().getName(), 28);
 
-        // Score / vs
+      
         Label score;
         if (m.isPlayed()) {
             score = new Label(m.getResult().getHomeScore() + " : " + m.getResult().getAwayScore());
@@ -99,7 +98,7 @@ public class FixturesView {
         score.setMinWidth(70);
         score.setAlignment(Pos.CENTER);
 
-        // Away team — logo, then name on the LEFT
+    
         var awayLogo = TeamLogoFactory.create(m.getAwayTeam().getName(), 28);
 
         Label awayName = new Label(m.getAwayTeam().getName());
