@@ -7,18 +7,6 @@ import valueobjects.TacticResult;
 
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Volleyball match simulator.
- * Rules implemented:
- *  - Best of 5 sets.
- *  - Sets 1-4: first to 25 points, must win by 2.
- *  - Set 5 (tiebreak): first to 15 points, must win by 2.
- *  - A match ends as soon as one team wins 3 sets.
- *
- * The "score" returned in MatchResult is the number of SETS won,
- * not total points, so the standings calculator can see 3-0, 3-1, 3-2, 2-3, 1-3, 0-3.
- */
 public class VolleyballMatchSimulator extends AbstractMatchSimulator {
 
     private static final int REGULAR_SET_TARGET = 25;
@@ -55,8 +43,6 @@ public class VolleyballMatchSimulator extends AbstractMatchSimulator {
         }
 
         applyPostMatchFatigue(match.getHomeTeam(), match.getAwayTeam(), setsPlayed);
-
-        // Score in MatchResult = sets won (volleyball-specific interpretation)
         MatchResult result = new MatchResult(
                 homeSets, awaySets,
                 match.getHomeTeam(), match.getAwayTeam(),
@@ -67,8 +53,6 @@ public class VolleyballMatchSimulator extends AbstractMatchSimulator {
         if (observer != null) observer.onMatchEnd(result);
         return result;
     }
-
-    /** Simulates a single set rally-by-rally until one team reaches the target with a 2-point lead. */
     @Override
     public PeriodResult simulatePeriod(Team home, Team away,
                                        TacticResult ht, TacticResult at,
@@ -93,7 +77,6 @@ public class VolleyballMatchSimulator extends AbstractMatchSimulator {
             rallyMinute++;
             if (random.nextDouble() < probHomeWinsRally) {
                 homeScore++;
-                // Fire a GOAL event for each point scored (treated as "point" in volleyball)
                 MatchEvent e = new MatchEvent(EventType.GOAL, rallyMinute,
                         randomPlayer(home.getStartingLineup()), home);
                 events.add(e); fireEvent(e);
@@ -103,16 +86,14 @@ public class VolleyballMatchSimulator extends AbstractMatchSimulator {
                         randomPlayer(away.getStartingLineup()), away);
                 events.add(e); fireEvent(e);
             }
-
-            // injury rolls - sparingly, roughly once per 10 rallies per side
+            
             if (random.nextInt(10) == 0) rollAndApplyInjury(home, events, rallyMinute);
             if (random.nextInt(10) == 0) rollAndApplyInjury(away, events, rallyMinute);
 
-            // Check set-end: target reached AND 2+ point lead
             if (homeScore >= target && homeScore - awayScore >= WIN_BY) break;
             if (awayScore >= target && awayScore - homeScore >= WIN_BY) break;
 
-            // Safety cap - volleyball sets can theoretically go forever, cap at 40
+           
             if (rallyMinute > 200) break;
         }
         return new PeriodResult(homeScore, awayScore, events);
@@ -123,14 +104,14 @@ public class VolleyballMatchSimulator extends AbstractMatchSimulator {
         if (lineup.isEmpty()) return;
         Player p = lineup.get(random.nextInt(lineup.size()));
         if (rollInjury(p)) {
-            p.applyInjury(random.nextInt(3) + 1);
+            p.applyInjury(random.nextInt(2) + 1);
             MatchEvent e = new MatchEvent(EventType.INJURY, rallyMinute, p, team);
             events.add(e); fireEvent(e);
         }
     }
 
     private void applyPostMatchFatigue(Team home, Team away, int setsPlayed) {
-        // More sets = more fatigue. Base 6 per set.
+     
         int fatiguePerSet = 6;
         for (Player p : home.getStartingLineup())
             p.increaseFatigue((int)(setsPlayed * fatiguePerSet * home.getCurrentTactic().getFatigueMultiplier()));
