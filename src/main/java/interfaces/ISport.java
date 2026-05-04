@@ -4,9 +4,10 @@ import core.domain.Player;
 import core.domain.Team;
 import valueobjects.RosterRules;
 
+import java.io.Serializable;
 import java.util.List;
 
-public interface ISport {
+public interface ISport extends Serializable {
     String getName();
     IMatchSimulator createMatchSimulator();
     IStandingsCalculator createStandingsCalculator();

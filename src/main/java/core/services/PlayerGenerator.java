@@ -11,15 +11,6 @@ import java.util.List;
 import java.util.Random;
 
 public class PlayerGenerator {
-
-    private static final String[] FIRST = {
-        "James","Luca","Marco","Pedro","Carlos","Ali","Dzeko","Kai",
-        "Noah","Icardi","Finn","Emil","Enzo","Ivan","Diego","Mateo"
-    };
-    private static final String[] LAST = {
-        "Smith","Rossi","Silva","Garcia","Müller","Yilmaz","Hassan",
-        "Kim","Ronaldo","Fernandez","Becker","Costa","Lopez","Novak"
-    };
     private static final String[] FOOTBALL_POSITIONS = {
         "Goalkeeper","Defender","Defender","Defender","Defender",
         "Midfielder","Midfielder","Midfielder",
@@ -43,7 +34,7 @@ public class PlayerGenerator {
             String pos = FOOTBALL_POSITIONS[i % FOOTBALL_POSITIONS.length];
             int shirt   = uniqueShirt(usedNums);
             usedNums.add(shirt);
-            Player p = new Player(randomName(), pos, generateAge(), shirt);
+            Player p = new Player(NameDataService.randomPlayerName(RNG), pos, generateAge(), shirt);
             for (String a : FOOTBALL_ATTRS) p.setAttribute(a, RNG.nextInt(100) + 1);
             players.add(p);
         }
@@ -64,16 +55,12 @@ public class PlayerGenerator {
 
     public static Coach generateCoach() {
         String spec = COACH_SPECS[RNG.nextInt(COACH_SPECS.length)];
-        Coach c = new Coach(randomName(), spec);
+        Coach c = new Coach(NameDataService.randomCoachName(RNG), spec);
         c.addTrainingPlan(new TrainingPlan(spec, RNG.nextInt(5) + 1));
         return c;
     }
 
     public static int generateAge() { return 17 + RNG.nextInt(19); } // 17-35
-
-    private static String randomName() {
-        return FIRST[RNG.nextInt(FIRST.length)] + " " + LAST[RNG.nextInt(LAST.length)];
-    }
 
     private static int uniqueShirt(List<Integer> used) {
         int n;

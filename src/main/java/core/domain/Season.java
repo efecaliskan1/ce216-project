@@ -17,6 +17,7 @@ public class Season implements Serializable {
     private boolean finished;
     private int seasonNumber;
     private IStandingsCalculator calculator;
+    private Team userTeam;
 
     public Season(ISport sport, League league, int seasonNumber) {
         this.sport        = sport;
@@ -43,6 +44,8 @@ public class Season implements Serializable {
     }
 
     public void addGameWeek(GameWeek gw) { gameWeeks.add(gw); }
+    public Team getUserTeam()           { return userTeam; }
+    public void setUserTeam(Team team)  { this.userTeam = team; }
 
     public int               getCurrentWeek() { return currentWeek; }
     public League            getLeague()       { return league; }
