@@ -56,9 +56,9 @@ public class PlayerTest {
     @Test
     void fatigue_increasesAndDecreases_withinBounds() {
         player.increaseFatigue(80);
-        player.increaseFatigue(50); // would be 130, capped at 100
+        player.increaseFatigue(50);
         assertEquals(100, player.getFatigueLevel());
-        player.recoverFatigue(200); // would be -100, capped at 0
+        player.recoverFatigue(200);
         assertEquals(0, player.getFatigueLevel());
     }
 

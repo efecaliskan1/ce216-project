@@ -25,7 +25,7 @@ class SaveLoadServiceTest {
         assertEquals(controller.getSeason().getCurrentWeek(), loaded.getCurrentWeek());
         assertEquals(controller.getSeason().getLeague().getName(), loaded.getLeague().getName());
         assertEquals(controller.getSeason().getLeague().getTeams().size(),
-                loaded.getLeague().getTeams().size());
+                     loaded.getLeague().getTeams().size());
 
         new File("saves/slot_" + slot + ".ser").delete();
     }
@@ -43,7 +43,7 @@ class SaveLoadServiceTest {
         Season loaded = svc.load(slot);
         assertEquals("Volleyball League", loaded.getLeague().getName());
         assertEquals(controller.getSeason().getGameWeeks().size(),
-                loaded.getGameWeeks().size());
+                     loaded.getGameWeeks().size());
 
         new File("saves/slot_" + slot + ".ser").delete();
     }
@@ -57,7 +57,7 @@ class SaveLoadServiceTest {
     @Test
     void resolveSportReturnsCorrectType() {
         SaveLoadService svc = new SaveLoadService();
-        assertEquals("Football", svc.resolveSport("football").getName());
+        assertEquals("Football",  svc.resolveSport("football").getName());
         assertEquals("Volleyball", svc.resolveSport("volleyball").getName());
     }
 

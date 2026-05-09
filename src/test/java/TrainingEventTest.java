@@ -25,7 +25,7 @@ class TrainingEventTest {
         TrainingPlan plan = new TrainingPlan("defense", 5);
         TrainingEvent event = new TrainingEvent(c, List.of(p), plan);
         event.execute();
-        // Sakatlanan oyuncu antrenman yapamaz
+
         assertEquals(60, p.getAttribute("defense"));
     }
 

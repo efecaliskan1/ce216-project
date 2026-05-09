@@ -29,7 +29,7 @@ public class StandingsServiceTest {
     void processResult_delegatesToCalculator() {
         MatchResult mr = new MatchResult(2, 1, teamA, teamB, List.of(), 0);
         service.processResult(mr);
-        // calculator should now have entries
+
         List<StandingEntry> table = service.getTable();
         assertFalse(table.isEmpty());
     }

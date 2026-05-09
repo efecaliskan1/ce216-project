@@ -49,8 +49,8 @@ public class FootballStandingsCalculatorTest {
 
     @Test
     void betterGoalDifference_ranksHigher_whenPointsEqual() {
-        calc.update(new MatchResult(3, 0, teamA, teamB, List.of(), 0)); // A: 3pts GD+3
-        calc.update(new MatchResult(1, 0, teamB, teamA, List.of(), 1)); // B: 3pts GD-2 → A still ahead
+        calc.update(new MatchResult(3, 0, teamA, teamB, List.of(), 0));
+        calc.update(new MatchResult(1, 0, teamB, teamA, List.of(), 1));
         assertTrue(calc.compareTeams(teamA, teamB) < 0);
     }
 

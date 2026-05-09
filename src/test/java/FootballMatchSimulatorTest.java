@@ -71,7 +71,6 @@ public class FootballMatchSimulatorTest {
         assertNotNull(m.getResult());
     }
 
-    // ---- helpers ----
     private Match buildMatch(interfaces.ITacticStrategy homeTac, interfaces.ITacticStrategy awayTac, int week) {
         Team home = buildTeam("Home", homeTac);
         Team away = buildTeam("Away", awayTac);

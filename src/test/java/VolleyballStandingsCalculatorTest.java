@@ -50,7 +50,7 @@ class VolleyballStandingsCalculatorTest {
         VolleyballStandingsCalculator calc = new VolleyballStandingsCalculator();
         calc.update(sweep(teamA, teamB, 3, 2));
         List<StandingEntry> table = calc.getStandings();
-        // winner is teamA (first in standings)
+
         assertEquals(2, table.get(0).getPoints());
         assertEquals(1, table.get(1).getPoints());
     }

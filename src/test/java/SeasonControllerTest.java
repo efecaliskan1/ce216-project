@@ -87,6 +87,10 @@ public class SeasonControllerTest {
         controller.nextWeek();
 
         assertEquals(1, controller.getAvailableTrainingSessions());
+
+        controller.nextWeek();
+
+        assertEquals(1, controller.getAvailableTrainingSessions());
     }
 
     @Test
