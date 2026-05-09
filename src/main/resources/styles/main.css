@@ -163,6 +163,16 @@
 .table-row-cell:selected { -fx-background-color: -fx-accent-soft; }
 .table-row-cell:selected .table-cell { -fx-text-fill: -fx-accent-text; }
 .table-row-cell:hover    { -fx-background-color: -fx-bg-section; }
+.table-row-cell.user-team-row {
+    -fx-background-color: -fx-accent-soft;
+    -fx-border-color: transparent transparent transparent -fx-accent;
+    -fx-border-width: 0 0 0 4;
+}
+.table-row-cell.user-team-row .table-cell {
+    -fx-text-fill: -fx-accent-text;
+    -fx-font-weight: 700;
+}
+.table-row-cell.user-team-row:hover { -fx-background-color: #dbeafe; }
 
 /* Inputs */
 .combo-box {
