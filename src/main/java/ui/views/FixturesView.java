@@ -86,7 +86,6 @@ public class FixturesView {
 
         var homeLogo = TeamLogoFactory.create(m.getHomeTeam().getName(), 28);
 
-      
         Label score;
         if (m.isPlayed()) {
             score = new Label(m.getResult().getHomeScore() + " : " + m.getResult().getAwayScore());
@@ -98,7 +97,6 @@ public class FixturesView {
         score.setMinWidth(70);
         score.setAlignment(Pos.CENTER);
 
-    
         var awayLogo = TeamLogoFactory.create(m.getAwayTeam().getName(), 28);
 
         Label awayName = new Label(m.getAwayTeam().getName());

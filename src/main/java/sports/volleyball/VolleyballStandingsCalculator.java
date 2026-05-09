@@ -6,6 +6,7 @@ import core.domain.Team;
 import interfaces.IStandingsCalculator;
 
 import java.util.*;
+
 public class VolleyballStandingsCalculator implements IStandingsCalculator {
 
     private final Map<Team, StandingEntry> entries = new LinkedHashMap<>();
@@ -31,14 +32,16 @@ public class VolleyballStandingsCalculator implements IStandingsCalculator {
         } else if (awaySets == 3 && homeSets == 2) {
             homePoints = 1; awayPoints = 2;
         } else {
-           
+
             homePoints = 0; awayPoints = 0;
         }
+
         if (homeSets > awaySets) {
-           
+
             entry(result.getHomeTeam()).addResult(result, homePoints, 0, 0);
             entry(result.getAwayTeam()).addResult(result, 0, 0, awayPoints);
         } else {
+
             entry(result.getHomeTeam()).addResult(result, 0, 0, homePoints);
             entry(result.getAwayTeam()).addResult(result, awayPoints, 0, 0);
         }
@@ -54,17 +57,20 @@ public class VolleyballStandingsCalculator implements IStandingsCalculator {
     @Override
     public int compareTeams(Team a, Team b) {
         StandingEntry ea = entry(a), eb = entry(b);
+
         if (ea.getPoints() != eb.getPoints())
             return Integer.compare(eb.getPoints(), ea.getPoints());
+
         if (ea.getWon() != eb.getWon())
             return Integer.compare(eb.getWon(), ea.getWon());
+
         double ratioA = ratio(ea.getGoalsFor(), ea.getGoalsAgainst());
         double ratioB = ratio(eb.getGoalsFor(), eb.getGoalsAgainst());
         if (ratioA != ratioB) return Double.compare(ratioB, ratioA);
-        
+
         int h2h = headToHead(a, b);
         if (h2h != 0) return h2h;
-        
+
         return random.nextBoolean() ? -1 : 1;
     }
 

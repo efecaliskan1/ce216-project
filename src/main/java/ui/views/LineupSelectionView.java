@@ -48,7 +48,6 @@ public class LineupSelectionView {
                 + "   ·   Week " + (match.getWeekNumber() + 1));
         sub.getStyleClass().add("subtitle");
 
-        // Determine which team the user controls (only one is editable)
         Team userTeam = app.getController().getUserTeam();
         boolean userHome = userTeam != null && userTeam == match.getHomeTeam();
         boolean userAway = userTeam != null && userTeam == match.getAwayTeam();
@@ -102,7 +101,6 @@ public class LineupSelectionView {
         VBox panel = new VBox(10);
         panel.getStyleClass().add("card");
 
-        // Header
         HBox header = new HBox(10);
         header.setAlignment(Pos.CENTER_LEFT);
         var logo = TeamLogoFactory.create(team.getName(), 44);
@@ -122,7 +120,6 @@ public class LineupSelectionView {
             header.getChildren().add(ai);
         }
 
-        // Tactic
         HBox tacticRow = new HBox(8);
         tacticRow.setAlignment(Pos.CENTER_LEFT);
         Label tactLbl = new Label("Tactic:");

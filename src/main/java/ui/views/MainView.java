@@ -49,7 +49,6 @@ public class MainView {
         side.getStyleClass().add("sidebar");
         side.setPrefWidth(220);
 
-        // Brand with circular logo
         HBox brandBox = new HBox(10);
         brandBox.setAlignment(Pos.CENTER_LEFT);
         brandBox.setPadding(new Insets(18, 20, 22, 20));

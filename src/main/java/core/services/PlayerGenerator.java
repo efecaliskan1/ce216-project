@@ -7,64 +7,120 @@ import core.domain.TrainingPlan;
 import interfaces.ISport;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class PlayerGenerator {
-    private static final String[] FOOTBALL_POSITIONS = {
-        "Goalkeeper","Defender","Defender","Defender","Defender",
-        "Midfielder","Midfielder","Midfielder",
-        "Striker","Striker","Striker",
-        "Defender","Midfielder","Midfielder","Striker","Defender","Midfielder","Striker"
-    };
-    private static final String[] FOOTBALL_ATTRS = {
-        "finishing","passing","tackling","dribbling","pace","stamina","strength"
-    };
-    private static final String[] COACH_SPECS = {
-        "finishing","passing","tackling","stamina"
-    };
 
     private static final Random RNG = new Random();
+    private static final Map<String, List<String>> POSITION_KEYS = new HashMap<>();
+
+    static {
+        POSITION_KEYS.put("Goalkeeper", Arrays.asList("passing", "tackling", "stamina", "strength"));
+        POSITION_KEYS.put("Defender", Arrays.asList("tackling", "strength", "stamina", "passing"));
+        POSITION_KEYS.put("Midfielder", Arrays.asList("passing", "dribbling", "stamina", "pace"));
+        POSITION_KEYS.put("Striker", Arrays.asList("finishing", "dribbling", "pace", "strength"));
+        POSITION_KEYS.put("Setter", Arrays.asList("serving", "receiving", "stamina", "jump"));
+        POSITION_KEYS.put("Libero", Arrays.asList("receiving", "serving", "stamina", "blocking"));
+        POSITION_KEYS.put("MiddleBlocker", Arrays.asList("blocking", "reach", "jump", "spiking"));
+        POSITION_KEYS.put("OutsideHitter", Arrays.asList("spiking", "serving", "jump", "receiving"));
+    }
 
     public static List<Player> generateForSport(ISport sport, Team team) {
-        int size = sport.getRosterRules().getRosterSize();
-        List<Player> players = new ArrayList<>();
+        List<Player> raw = sport.generatePlayers(team);
+        List<Player> named = new ArrayList<>();
         List<Integer> usedNums = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            String pos = FOOTBALL_POSITIONS[i % FOOTBALL_POSITIONS.length];
-            int shirt   = uniqueShirt(usedNums);
+
+        for (Player p : raw) {
+            int shirt = uniqueShirt(usedNums);
             usedNums.add(shirt);
-            Player p = new Player(NameDataService.randomPlayerName(RNG), pos, generateAge(), shirt);
-            for (String a : FOOTBALL_ATTRS) p.setAttribute(a, RNG.nextInt(100) + 1);
-            players.add(p);
+            Player renamed = new Player(NameDataService.randomPlayerName(RNG),
+                                        p.getPosition(),
+                                        p.getAge(),
+                                        shirt);
+
+            for (var entry : p.getAttributes().entrySet()) {
+                renamed.setAttribute(entry.getKey(), entry.getValue());
+            }
+            renamed.setOverall(calculateOverall(renamed));
+            named.add(renamed);
         }
-        return players;
+        return named;
     }
 
     public static List<Team> generateTeams(ISport sport, List<String> names) {
         List<Team> teams = new ArrayList<>();
         for (String name : names) {
-            Team t = new Team(name, name.toLowerCase().replace(" ","_") + ".png",
+            Team t = new Team(name,
+                              name.toLowerCase().replace(" ", "_") + ".png",
                               sport.getRosterRules());
             generateForSport(sport, t).forEach(t::addPlayer);
-            t.setCoach(generateCoach());
+            t.organizeFootballLineup();
+            t.setCoach(generateCoachFor(sport));
             teams.add(t);
         }
         return teams;
     }
 
-    public static Coach generateCoach() {
-        String spec = COACH_SPECS[RNG.nextInt(COACH_SPECS.length)];
+    public static Coach generateCoachFor(ISport sport) {
+        String[] specs = sport.getName().equalsIgnoreCase("Volleyball")
+                ? new String[]{"spiking", "blocking", "serving", "receiving"}
+                : new String[]{"finishing", "passing", "tackling", "stamina"};
+        String spec = specs[RNG.nextInt(specs.length)];
         Coach c = new Coach(NameDataService.randomCoachName(RNG), spec);
         c.addTrainingPlan(new TrainingPlan(spec, RNG.nextInt(5) + 1));
         return c;
     }
 
-    public static int generateAge() { return 17 + RNG.nextInt(19); } // 17-35
+    @Deprecated
+    public static Coach generateCoach() {
+        String[] specs = {"finishing", "passing", "tackling", "stamina"};
+        String spec = specs[RNG.nextInt(specs.length)];
+        Coach c = new Coach(NameDataService.randomCoachName(RNG), spec);
+        c.addTrainingPlan(new TrainingPlan(spec, RNG.nextInt(5) + 1));
+        return c;
+    }
+
+    public static int generateAge() { return 17 + RNG.nextInt(19); }
 
     private static int uniqueShirt(List<Integer> used) {
         int n;
         do { n = 1 + RNG.nextInt(99); } while (used.contains(n));
         return n;
+    }
+
+    public static void ensureOveralls(List<Team> teams) {
+        for (Team team : teams) {
+            for (Player player : team.getPlayers()) {
+                if (player.getOverall() <= 0) {
+                    player.setOverall(calculateOverall(player));
+                }
+            }
+        }
+    }
+
+    private static int calculateOverall(Player player) {
+        List<String> keys = POSITION_KEYS.get(player.getPosition());
+        if (keys == null || keys.isEmpty()) {
+            double avg = player.getAttributes().values().stream()
+                    .mapToInt(Integer::intValue)
+                    .average()
+                    .orElse(50.0);
+            return clampOverall((int) Math.round(60 + avg * 0.3));
+        }
+
+        double weighted = 0.0;
+        for (String key : keys) {
+            weighted += player.getAttribute(key);
+        }
+        weighted /= keys.size();
+        return clampOverall((int) Math.round(60 + weighted * 0.3));
+    }
+
+    private static int clampOverall(int overall) {
+        return Math.max(60, Math.min(90, overall));
     }
 }

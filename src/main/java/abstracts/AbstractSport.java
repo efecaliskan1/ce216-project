@@ -20,7 +20,6 @@ public abstract class AbstractSport implements ISport {
         this.scoringConfig = scoringConfig;
     }
 
-    /** Shared lineup validation: correct size and all players available. */
     public boolean validateLineup(List<Player> lineup) {
         if (lineup.size() != rosterRules.getStartingLineupSize()) return false;
         for (Player p : lineup) if (!p.isAvailable()) return false;

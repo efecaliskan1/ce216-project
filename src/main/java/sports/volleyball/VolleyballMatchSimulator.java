@@ -7,6 +7,7 @@ import valueobjects.TacticResult;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public class VolleyballMatchSimulator extends AbstractMatchSimulator {
 
     private static final int REGULAR_SET_TARGET = 25;
@@ -43,6 +44,7 @@ public class VolleyballMatchSimulator extends AbstractMatchSimulator {
         }
 
         applyPostMatchFatigue(match.getHomeTeam(), match.getAwayTeam(), setsPlayed);
+
         MatchResult result = new MatchResult(
                 homeSets, awaySets,
                 match.getHomeTeam(), match.getAwayTeam(),
@@ -53,6 +55,7 @@ public class VolleyballMatchSimulator extends AbstractMatchSimulator {
         if (observer != null) observer.onMatchEnd(result);
         return result;
     }
+
     @Override
     public PeriodResult simulatePeriod(Team home, Team away,
                                        TacticResult ht, TacticResult at,
@@ -77,6 +80,7 @@ public class VolleyballMatchSimulator extends AbstractMatchSimulator {
             rallyMinute++;
             if (random.nextDouble() < probHomeWinsRally) {
                 homeScore++;
+
                 MatchEvent e = new MatchEvent(EventType.GOAL, rallyMinute,
                         randomPlayer(home.getStartingLineup()), home);
                 events.add(e); fireEvent(e);
@@ -86,14 +90,13 @@ public class VolleyballMatchSimulator extends AbstractMatchSimulator {
                         randomPlayer(away.getStartingLineup()), away);
                 events.add(e); fireEvent(e);
             }
-            
+
             if (random.nextInt(10) == 0) rollAndApplyInjury(home, events, rallyMinute);
             if (random.nextInt(10) == 0) rollAndApplyInjury(away, events, rallyMinute);
 
             if (homeScore >= target && homeScore - awayScore >= WIN_BY) break;
             if (awayScore >= target && awayScore - homeScore >= WIN_BY) break;
 
-           
             if (rallyMinute > 200) break;
         }
         return new PeriodResult(homeScore, awayScore, events);
@@ -111,7 +114,7 @@ public class VolleyballMatchSimulator extends AbstractMatchSimulator {
     }
 
     private void applyPostMatchFatigue(Team home, Team away, int setsPlayed) {
-     
+
         int fatiguePerSet = 6;
         for (Player p : home.getStartingLineup())
             p.increaseFatigue((int)(setsPlayed * fatiguePerSet * home.getCurrentTactic().getFatigueMultiplier()));

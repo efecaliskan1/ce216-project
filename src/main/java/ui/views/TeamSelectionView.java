@@ -32,7 +32,6 @@ public class TeamSelectionView {
         bp.setStyle("-fx-background-color: #f3f4f6;");
         bp.setPadding(new Insets(28, 32, 28, 32));
 
-        // Top
         VBox top = new VBox(6);
         Label title = new Label("Choose your club");
         title.getStyleClass().add("h1");
@@ -42,7 +41,6 @@ public class TeamSelectionView {
         BorderPane.setMargin(top, new Insets(0, 0, 16, 0));
         bp.setTop(top);
 
-        // Center: grid of team tiles
         List<Team> teams = app.getController().getSeason().getLeague().getTeams();
         TilePane grid = new TilePane();
         grid.setHgap(12);
@@ -58,7 +56,6 @@ public class TeamSelectionView {
         sp.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
         bp.setCenter(sp);
 
-        // Right: details
         detailPane = new VBox(10);
         detailPane.getStyleClass().add("card");
         detailPane.setPrefWidth(280);
@@ -69,7 +66,6 @@ public class TeamSelectionView {
         BorderPane.setMargin(detailPane, new Insets(0, 0, 0, 16));
         bp.setRight(detailPane);
 
-        // Bottom: confirm
         confirmBtn = new Button("Start career →");
         confirmBtn.getStyleClass().add("primary");
         confirmBtn.setPrefHeight(44);
@@ -109,7 +105,7 @@ public class TeamSelectionView {
 
     private void selectTeam(Team t, VBox tile) {
         selected = t;
-        // Highlight selection
+
         for (var n : ((TilePane) ((ScrollPane) root.getCenter()).getContent()).getChildren()) {
             n.setStyle("");
         }

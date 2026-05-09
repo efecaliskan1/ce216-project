@@ -15,8 +15,8 @@ import javafx.scene.layout.VBox;
 
 public class SubstitutionDialog extends Dialog<Player[]> {
 
-    private TableView<Player> outTable;   // player going out (from lineup)
-    private TableView<Player> inTable;    // player coming in (from bench)
+    private TableView<Player> outTable;
+    private TableView<Player> inTable;
 
     public SubstitutionDialog(Team team, LiveMatchController ctrl) {
         setTitle("Substitution — " + team.getName());
@@ -97,7 +97,6 @@ public class SubstitutionDialog extends Dialog<Player[]> {
         });
         stat.setPrefWidth(110);
 
-        // Disable selection of injured players when picking the player coming on
         tv.setRowFactory(t -> new TableRow<>() {
             @Override protected void updateItem(Player p, boolean empty) {
                 super.updateItem(p, empty);

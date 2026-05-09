@@ -30,7 +30,7 @@ public class StandingsView {
     private VBox build() {
         VBox page = new VBox(16);
         page.setPadding(new Insets(36, 48, 36, 48));
-        page.setStyle("-fx-background-color: #0a0e1a;");
+        page.setStyle("-fx-background-color: #f3f4f6;");
 
         Label title = new Label("League Table");
         title.getStyleClass().add("h1");
@@ -50,15 +50,24 @@ public class StandingsView {
     private TableView<Row> buildTable(boolean isVolleyball) {
         TableView<Row> tv = new TableView<>();
         tv.setPlaceholder(new Label("No matches played yet."));
+        String userTeamName = app.getController().getUserTeam() != null
+                ? app.getController().getUserTeam().getName()
+                : "";
         tv.setRowFactory(t -> {
             TableRow<Row> r = new TableRow<>();
             r.setPrefHeight(46);
+            r.itemProperty().addListener((obs, oldRow, newRow) -> {
+                boolean isUserTeam = newRow != null && newRow.team.equals(userTeamName);
+                r.getStyleClass().remove("user-team-row");
+                if (isUserTeam) {
+                    r.getStyleClass().add("user-team-row");
+                }
+            });
             return r;
         });
 
         TableColumn<Row, Number> rank = numCol("#",  r -> r.rank, 50);
 
-        // Logo column
         TableColumn<Row, Row> logoCol = new TableColumn<>("");
         logoCol.setCellValueFactory(cd -> new SimpleObjectProperty<>(cd.getValue()));
         logoCol.setCellFactory(c -> new TableCell<>() {
@@ -75,7 +84,6 @@ public class StandingsView {
         logoCol.setMinWidth(50);
         logoCol.setSortable(false);
 
-        // Team name column
         TableColumn<Row, String> name = new TableColumn<>("TEAM");
         name.setCellValueFactory(cd -> new javafx.beans.property.SimpleStringProperty(cd.getValue().team));
         name.setPrefWidth(240);

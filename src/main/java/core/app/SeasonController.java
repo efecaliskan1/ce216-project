@@ -27,16 +27,17 @@ public class SeasonController {
     public void setObserver(MatchObserver obs) { this.observer = obs; }
 
     public void loadExistingSeason(Season loaded) {
-        this.season = loaded;
-        this.sport = loaded.getSport();
+        this.season           = loaded;
+        this.sport            = loaded.getSport();
         this.matchCoordinator = new MatchCoordinator(sport);
         if (observer != null) matchCoordinator.setObserver(observer);
         this.standingsService = new StandingsService(loaded.getCalculator());
-        this.userTeam = loaded.getUserTeam();
+        this.userTeam         = loaded.getUserTeam();
+        PlayerGenerator.ensureOveralls(loaded.getLeague().getTeams());
     }
 
     public void startSeason(String sportName) {
-        this.sport = SportFactory.create(sportName);   // throws on unknown
+        this.sport = SportFactory.create(sportName);
 
         IStandingsCalculator calc = sport.createStandingsCalculator();
         standingsService  = new StandingsService(calc);
@@ -44,7 +45,8 @@ public class SeasonController {
         if (observer != null) matchCoordinator.setObserver(observer);
 
         League league = new League(sport.getName() + " League");
-        List<Team> teams = PlayerGenerator.generateTeams(sport, NameDataService.pickTeamNames(16, new Random()));
+        List<String> teamNames = NameDataService.pickTeamNames(16, new Random());
+        List<Team> teams = PlayerGenerator.generateTeams(sport, teamNames);
         for (Team t : teams) {
             t.setCurrentTactic(TacticFactory.create("balanced"));
             league.addTeam(t);
@@ -53,43 +55,54 @@ public class SeasonController {
         FixtureGenerator fg = new FixtureGenerator();
         List<GameWeek> weeks = fg.generate(league);
 
-        // Register training events for each team in each game week
-        for (GameWeek gw : weeks) {
-            for (Team t : league.getTeams()) {
-                if (t.getCoach() != null && !t.getCoach().getTrainingPlans().isEmpty()) {
-                    TrainingPlan plan = t.getCoach().getTrainingPlans().get(0);
-                    TrainingEvent te = new TrainingEvent(t.getCoach(), t.getPlayers(), plan);
-                    gw.addTrainingEvent(te);
-                }
-            }
-        }
-
-        season = new Season(sport, league, 1);
-        season.setCalculator(calc);
-        for (GameWeek gw : weeks) season.addGameWeek(gw);
+        season = new Season(league, sport, weeks, calc);
         userTeam = null;
     }
 
-    public Team getUserTeam()           { return userTeam; }
-    public void setUserTeam(Team team)  {
-        this.userTeam = team;
-        if (season != null) {
-            season.setUserTeam(team);
+    public void startNextSeason() {
+        if (season == null) return;
+
+        for (Team team : season.getLeague().getTeams()) {
+            team.resetMatchState();
+            for (Player player : team.getPlayers()) {
+                player.advanceSeasonAge();
+                player.clearInjury();
+                player.recoverFatigue(100);
+            }
+            team.organizeFootballLineup();
         }
+
+        IStandingsCalculator calc = sport.createStandingsCalculator();
+        standingsService  = new StandingsService(calc);
+        matchCoordinator  = new MatchCoordinator(sport);
+        if (observer != null) matchCoordinator.setObserver(observer);
+
+        League league = new League(season.getLeague().getName());
+        for (Team team : season.getLeague().getTeams()) {
+            league.addTeam(team);
+        }
+
+        FixtureGenerator fg = new FixtureGenerator();
+        List<GameWeek> weeks = fg.generate(league);
+
+        season = new Season(league, sport, weeks, calc, season.getSeasonNumber() + 1);
+        if (userTeam != null) season.setUserTeam(userTeam);
+    }
+
+    public Team getUserTeam()              { return userTeam; }
+    public void setUserTeam(Team team)     {
+        this.userTeam = team;
+        if (season != null) season.setUserTeam(team);
     }
 
     public void nextWeek() {
-        if (season == null || season.isFinished()) return;
+        if (season.isFinished()) return;
         GameWeek gw = season.getCurrentGameWeek();
-        if (gw == null) return;
 
-        // Phase 1: Training
         gw.runTraining();
 
-        // Phase 2: Recover fatigue from previous week
         recoverFatigueForAll();
 
-        // Phase 3: Play matches → apply new injuries → update standings → decrement injuries
         for (Match match : gw.getFixtures()) {
             if (!match.isPlayed()) {
                 MatchResult result = matchCoordinator.executeMatch(match);
@@ -103,48 +116,57 @@ public class SeasonController {
 
         gw.markCompleted();
         season.advanceWeek();
+        season.grantWeeklyTrainingSession();
     }
 
     public void simulateOtherMatches(Match userMatch) {
-        if (season == null || userMatch == null) return;
         GameWeek gw = season.getCurrentGameWeek();
-        if (gw == null) return;
-
         gw.runTraining();
         recoverFatigueForAll();
-        for (Match match : gw.getFixtures()) {
-            if (match == userMatch || match.isPlayed()) {
-                continue;
-            }
-            MatchResult result = matchCoordinator.executeMatch(match);
+        for (Match m : gw.getFixtures()) {
+            if (m == userMatch) continue;
+            if (m.isPlayed()) continue;
+            MatchResult result = matchCoordinator.executeMatch(m);
             applyNewInjuries(result);
             standingsService.processResult(result);
             season.getLeague().addResult(result);
-            decrementInjuries(match.getHomeTeam());
-            decrementInjuries(match.getAwayTeam());
+            decrementInjuries(m.getHomeTeam());
+            decrementInjuries(m.getAwayTeam());
         }
     }
 
     public void finishWeekAfterUserMatch(Match userMatch) {
-        if (season == null || userMatch == null) return;
-        if (userMatch.isPlayed() && userMatch.getResult() != null) {
+        if (userMatch.isPlayed()) {
             applyNewInjuries(userMatch.getResult());
+
             season.getLeague().addResult(userMatch.getResult());
             decrementInjuries(userMatch.getHomeTeam());
             decrementInjuries(userMatch.getAwayTeam());
         }
         GameWeek gw = season.getCurrentGameWeek();
-        if (gw != null) {
-            gw.markCompleted();
-        }
+        gw.markCompleted();
         season.advanceWeek();
+        season.grantWeeklyTrainingSession();
+    }
+
+    public int getAvailableTrainingSessions() {
+        return season == null ? 0 : season.getAvailableTrainingSessions();
+    }
+
+    public boolean useTrainingSession(Team team) {
+        if (season == null || team == null) return false;
+        if (userTeam == null || team != userTeam) return false;
+        if (team.getCoach() == null) return false;
+        if (!season.consumeTrainingSession()) return false;
+        team.getCoach().trainPlayers(team.getPlayers());
+        return true;
     }
 
     private void applyNewInjuries(MatchResult result) {
         for (MatchEvent e : result.getEvents()) {
             if (e.getType() == EventType.INJURY) {
                 Player p = e.getPlayer();
-                if (!p.isInjured()) p.applyInjury(1 + (int)(Math.random() * 3));
+                if (!p.isInjured()) p.applyInjury(1 + (int)(Math.random() * 2));
             }
         }
     }

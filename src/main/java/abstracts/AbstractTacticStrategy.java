@@ -11,5 +11,5 @@ public abstract class AbstractTacticStrategy implements ITacticStrategy {
     public abstract TacticResult applyTactic(Team team, Match match);
 
     @Override
-    public float getFatigueMultiplier() { return 1.0f; } // subclasses override as needed
+    public float getFatigueMultiplier() { return 1.0f; }
 }

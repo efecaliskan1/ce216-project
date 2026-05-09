@@ -10,14 +10,6 @@ import core.services.SaveLoadService;
 
 import java.util.List;
 
-/**
- * Entry point for: mvn exec:java
- *
- * Demonstrates:
- *   1. Football season (3 weeks) + standings
- *   2. Volleyball season (3 weeks) + standings
- *   3. Save / Load round trip using SaveLoadService
- */
 public class Main {
 
     public static void main(String[] args) {

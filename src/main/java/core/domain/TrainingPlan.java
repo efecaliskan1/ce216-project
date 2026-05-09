@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class TrainingPlan implements Serializable {
     private final String targetAttribute;
-    private final int intensity; // 1-10
+    private final int intensity;
 
     public TrainingPlan(String targetAttribute, int intensity) {
         this.targetAttribute = targetAttribute;

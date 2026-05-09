@@ -54,13 +54,10 @@ public class LiveMatchView {
         bp.setStyle("-fx-background-color: #f3f4f6;");
         bp.setPadding(new Insets(20, 28, 20, 28));
 
-     
         bp.setTop(buildScoreboard());
 
-      
         bp.setCenter(buildEventArea());
 
-        
         bp.setBottom(buildControls());
 
         return bp;
@@ -77,7 +74,6 @@ public class LiveMatchView {
         HBox row = new HBox(28);
         row.setAlignment(Pos.CENTER);
 
-        // Home side
         VBox homeBox = new VBox(8);
         homeBox.setAlignment(Pos.CENTER);
         homeBox.getChildren().addAll(
@@ -126,7 +122,6 @@ public class LiveMatchView {
         return l;
     }
 
-  
     private VBox buildEventArea() {
         VBox card = new VBox(10);
         card.getStyleClass().add("card");
@@ -145,12 +140,10 @@ public class LiveMatchView {
         return card;
     }
 
-
     private VBox buildControls() {
         VBox wrap = new VBox(10);
         wrap.setPadding(new Insets(14, 0, 0, 0));
 
-        // Row 1: tick controls
         HBox playRow = new HBox(8);
         playRow.setAlignment(Pos.CENTER);
         tickBtn   = new Button(ctrl.isVolleyball() ? "▶ Next rally" : "▶ Next minute");
@@ -173,14 +166,13 @@ public class LiveMatchView {
             refreshSnapshot();
         });
         fastFwdBtn.setOnAction(e -> {
-            // run repeatedly until match ends
+
             while (ctrl.getState() == State.RUNNING) ctrl.tick();
             refreshSnapshot();
         });
 
         playRow.getChildren().addAll(tickBtn, skip5Btn, skip10Btn, fastFwdBtn);
 
-        // Row 2: management actions per team
         HBox manageRow = new HBox(20);
         manageRow.setAlignment(Pos.CENTER);
 
@@ -189,7 +181,6 @@ public class LiveMatchView {
 
         manageRow.getChildren().addAll(homeMgmt, awayMgmt);
 
-        // Row 3: finish button (visible after match)
         finishBtn = new Button("Continue → View result");
         finishBtn.getStyleClass().add("primary");
         finishBtn.setPrefHeight(40);
@@ -231,7 +222,7 @@ public class LiveMatchView {
         Label subsLeft = new Label();
         subsLeft.setStyle("-fx-font-size: 10px; -fx-text-fill: #9ca3af;");
         updateSubsLabel(team, subsLeft, userManaged);
-        sub.setUserData(subsLeft); // hold ref so we can refresh later
+        sub.setUserData(subsLeft);
 
         btns.getChildren().addAll(sub, tactic);
         col.getChildren().addAll(name, btns, subsLeft);
@@ -250,7 +241,6 @@ public class LiveMatchView {
         }
     }
 
-   
     private void openSubDialog(Team team) {
         SubstitutionDialog dlg = new SubstitutionDialog(team, ctrl);
         dlg.showAndWait().ifPresent(pair -> {
@@ -259,7 +249,7 @@ public class LiveMatchView {
                 if (!ok) {
                     new Alert(Alert.AlertType.WARNING, "Substitution failed (limit reached or invalid players).").showAndWait();
                 }
-                // refresh the sub count label
+
                 Button btn = (team == ctrl.getHomeTeam()) ? subHomeBtn : subAwayBtn;
                 Label  lbl = (Label) btn.getUserData();
                 if (lbl != null) updateSubsLabel(team, lbl, true);
@@ -328,9 +318,8 @@ public class LiveMatchView {
             lbl.setStyle("-fx-text-fill: #111827; -fx-font-size: 12px;");
 
             row.getChildren().addAll(time, icon, lbl);
-            eventLog.getChildren().add(0, row); // newest on top
+            eventLog.getChildren().add(0, row);
 
-            // Update score
             if (ctrl.isVolleyball()) {
                 homeScoreLbl.setText(String.valueOf(ctrl.getHomeSets()));
                 awayScoreLbl.setText(String.valueOf(ctrl.getAwaySets()));

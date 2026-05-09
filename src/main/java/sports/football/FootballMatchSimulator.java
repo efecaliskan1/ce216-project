@@ -19,17 +19,17 @@ public class FootballMatchSimulator extends AbstractMatchSimulator {
         List<MatchEvent> allEvents = new ArrayList<>();
 
         for (int period = 0; period < 2; period++) {
-            match.currentPeriod = period;
+            match.setCurrentPeriod(period);
             match.applyCurrentTactics();
 
             PeriodResult pr = simulatePeriod(
                     match.getHomeTeam(), match.getAwayTeam(),
-                    match.homeAppliedTactic, match.awayAppliedTactic,
+                    match.getHomeAppliedTactic(), match.getAwayAppliedTactic(),
                     period);
 
             homeTotal += pr.getHomeScore();
             awayTotal += pr.getAwayScore();
-            match.eventLog.addAll(pr.getEvents());
+            match.getEventLog().addAll(pr.getEvents());
             allEvents.addAll(pr.getEvents());
 
             if (observer != null)
@@ -80,7 +80,7 @@ public class FootballMatchSimulator extends AbstractMatchSimulator {
             }
             for (Player p : home.getStartingLineup()) {
                 if (rollInjury(p)) {
-                    p.applyInjury(random.nextInt(3) + 1);
+                    p.applyInjury(random.nextInt(2) + 1);
                     MatchEvent e = new MatchEvent(EventType.INJURY, offset + min, p, home);
                     events.add(e); fireEvent(e);
                 }

@@ -18,7 +18,6 @@ public class GameWeek implements Serializable {
         this.trainingEvents = new ArrayList<>();
     }
 
-    /** Runs training for every coaching event registered this week. */
     public void runTraining() {
         for (TrainingEvent e : trainingEvents) e.execute();
     }
@@ -26,8 +25,6 @@ public class GameWeek implements Serializable {
     public void addFixture(Match match)         { fixtures.add(match); }
     public void addTrainingEvent(TrainingEvent e){ trainingEvents.add(e); }
     public void markCompleted()                 { completed = true; }
-
-    // runMatches / applyInjuries / updateStandings removed — orchestration is in SeasonController
 
     public int              getWeekNumber()     { return weekNumber; }
     public List<Match>      getFixtures()       { return Collections.unmodifiableList(fixtures); }

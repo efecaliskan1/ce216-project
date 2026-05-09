@@ -11,9 +11,11 @@ public class Player implements Serializable {
     private int age;
     private int shirtNumber;
     private Map<String, Integer> attributes;
-    private int fatigueLevel;          // 0-100
+    private int overall;
+    private int overallTrainingProgress;
+    private int fatigueLevel;
     private boolean injuryStatus;
-    private int injuredGamesRemaining; // game-based
+    private int injuredGamesRemaining;
 
     public Player(String name, String position, int age, int shirtNumber) {
         this.name       = name;
@@ -28,7 +30,6 @@ public class Player implements Serializable {
         this.injuredGamesRemaining = games;
     }
 
-    /** Call AFTER each match the player misses. */
     public void decrementInjury() {
         if (injuredGamesRemaining > 0) injuredGamesRemaining--;
         if (injuredGamesRemaining == 0) injuryStatus = false;
@@ -48,6 +49,25 @@ public class Player implements Serializable {
         String attr = plan.getTargetAttribute();
         int current  = attributes.getOrDefault(attr, 0);
         attributes.put(attr, Math.min(100, current + plan.getAttributeGain()));
+        if (age <= 32) {
+            overallTrainingProgress += plan.getAttributeGain();
+            while (overallTrainingProgress >= 10 && overall < 90) {
+                overall++;
+                overallTrainingProgress -= 10;
+            }
+            if (overall >= 90) overallTrainingProgress = 0;
+        }
+    }
+
+    public void clearInjury() {
+        this.injuryStatus = false;
+        this.injuredGamesRemaining = 0;
+    }
+
+    public void advanceSeasonAge() { age++; }
+
+    public void setOverall(int overall) {
+        this.overall = Math.max(60, Math.min(90, overall));
     }
 
     public void setAttribute(String key, int value) { attributes.put(key, value); }
@@ -58,6 +78,8 @@ public class Player implements Serializable {
     public int    getAge()                  { return age; }
     public int    getShirtNumber()          { return shirtNumber; }
     public Map<String, Integer> getAttributes() { return attributes; }
+    public int    getOverall()              { return overall; }
+    public int    getOverallTrainingProgress() { return overallTrainingProgress; }
     public int    getFatigueLevel()         { return fatigueLevel; }
     public boolean isInjured()              { return injuryStatus; }
     public int    getInjuredGamesRemaining(){ return injuredGamesRemaining; }

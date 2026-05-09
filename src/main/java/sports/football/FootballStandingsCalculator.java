@@ -36,23 +36,18 @@ public class FootballStandingsCalculator implements IStandingsCalculator {
     public int compareTeams(Team a, Team b) {
         StandingEntry ea = entry(a), eb = entry(b);
 
-        // Step 1 – points
         if (ea.getPoints() != eb.getPoints())
             return Integer.compare(eb.getPoints(), ea.getPoints());
 
-        // Step 2 – head-to-head
         int h2h = headToHead(a, b);
         if (h2h != 0) return h2h;
 
-        // Step 3 – goal difference
         if (ea.getGoalDifference() != eb.getGoalDifference())
             return Integer.compare(eb.getGoalDifference(), ea.getGoalDifference());
 
-        // Step 4 – goals scored
         if (ea.getGoalsFor() != eb.getGoalsFor())
             return Integer.compare(eb.getGoalsFor(), ea.getGoalsFor());
 
-        // Step 5 – coin toss
         return random.nextBoolean() ? -1 : 1;
     }
 
@@ -69,7 +64,7 @@ public class FootballStandingsCalculator implements IStandingsCalculator {
                             || (r.getHomeTeam().equals(b) && r.getAwayTeam().equals(a));
             if (!relevant) continue;
             if (r.isDraw()) { ap += scoring.getDrawPoints(); bp += scoring.getDrawPoints(); }
-            else r.getWinner().ifPresent(w -> { /* handled below */ });
+            else r.getWinner().ifPresent(w -> {  });
 
             if (!r.isDraw() && r.getWinner().isPresent()) {
                 if (r.getWinner().get().equals(a)) ap += scoring.getWinPoints();

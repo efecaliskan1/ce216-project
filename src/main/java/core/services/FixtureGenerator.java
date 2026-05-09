@@ -10,21 +10,15 @@ import java.util.List;
 
 public class FixtureGenerator {
 
-    /**
-     * Generates a full double round-robin schedule.
-     * For N teams: (N-1)*2 game weeks, each with N/2 matches.
-     * Each team plays every other team exactly twice (home + away).
-     */
     public List<GameWeek> generate(League league) {
         List<Team> teams = new ArrayList<>(league.getTeams());
-        if (teams.size() % 2 != 0) teams.add(null); // dummy for odd count
+        if (teams.size() % 2 != 0) teams.add(null);
         int n = teams.size();
 
         List<GameWeek> gameWeeks = new ArrayList<>();
         List<List<Match>> firstRound  = buildRound(teams, 0);
         List<List<Match>> secondRound = buildRound(teams, firstRound.size());
 
-        // reverse home/away for second round
         for (int i = 0; i < secondRound.size(); i++) {
             List<Match> reversed = new ArrayList<>();
             for (Match m : secondRound.get(i)) {

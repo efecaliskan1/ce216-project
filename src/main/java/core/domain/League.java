@@ -11,7 +11,7 @@ public class League implements Serializable {
     private final String name;
     private final List<Team> teams;
     private final List<Match> fixtures;
-    private final List<MatchResult> matchHistory; // for head-to-head; no standings here
+    private final List<MatchResult> matchHistory;
 
     public League(String name) {
         this.name         = name;

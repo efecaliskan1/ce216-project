@@ -39,7 +39,6 @@ public class PostMatchView {
         Label title = new Label("Full time");
         title.getStyleClass().add("h1");
 
-        // Big result banner
         HBox banner = new HBox(28);
         banner.setAlignment(Pos.CENTER);
         banner.getStyleClass().add("card");
@@ -62,7 +61,6 @@ public class PostMatchView {
 
         banner.getChildren().addAll(home, score, away);
 
-        // Two-col split: scorers + events
         HBox split = new HBox(16);
         split.getChildren().addAll(scorersCard(), eventsCard());
         HBox.setHgrow(split.getChildren().get(0), Priority.ALWAYS);
