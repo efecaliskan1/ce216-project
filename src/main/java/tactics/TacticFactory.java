@@ -5,7 +5,7 @@ import interfaces.ITacticStrategy;
 public class TacticFactory {
 
     public static ITacticStrategy create(String name) {
-        return switch (name.toLowerCase()) {
+        return switch (name.toLowerCase(java.util.Locale.ROOT))  {
             case "defensive"                  -> new DefensiveStrategy();
             case "blockfocus", "block_focus" -> new DefensiveStrategy();
             case "balanced"                   -> new BalancedStrategy();
