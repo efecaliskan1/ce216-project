@@ -1,0 +1,43 @@
+Sport Management System — Setup
+================================
+
+Requirements:
+-------------
+  - JDK or JRE 17+ installed on the machine
+  - Internet connection for the first build (Maven downloads JavaFX ~50 MB)
+  - Maven 3.6+ on PATH (only needed to build from source)
+
+Quick start (recommended):
+--------------------------
+  1. Clone the repository:
+
+       git clone https://github.com/efecaliskan1/ce216-project.git
+       cd ce216-project
+
+  2. Build the project:
+
+       mvn clean package
+
+  3. Double-click run.bat  (or run it from the terminal)
+
+     run.bat automatically stages the JavaFX libraries on first run and
+     launches the application. No EXE or installer needed.
+
+What run.bat does:
+------------------
+  - Copies JavaFX 21 jars into target\deps (first run only)
+  - Launches the JAR with the correct --module-path and --add-modules
+    flags so JavaFX is on the module path
+
+JavaFX note:
+------------
+  JavaFX is NOT included in standard JRE/JDK distributions.
+  run.bat handles this automatically via Maven. The libraries are defined
+  in pom.xml and downloaded from Maven Central on first build.
+
+Run tests:
+----------
+  mvn test        (26 test classes, 142 tests)
+
+Repository:  https://github.com/efecaliskan1/ce216-project
+Release:     https://github.com/efecaliskan1/ce216-project/releases/tag/m4_last

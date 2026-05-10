@@ -18,41 +18,37 @@ mvn exec:java -Dexec.mainClass=core.app.Main
 # Run the JavaFX UI
 mvn javafx:run
 
-# Run all tests (26 test classes, ~126 tests)
+# Run all tests (26 test classes, 142 tests)
 mvn test
 ```
 
-## Building a Windows installer
+## Running the application (Windows)
 
-Windows-only. Requires:
+The repository ships a `run.bat` launcher that uses your installed JDK/JRE and bundles the JavaFX dependencies through Maven. JavaFX is **not** part of standard JDK/JRE distributions, so `run.bat` stages the `javafx-controls`, `javafx-fxml`, and `javafx-graphics` jars from Maven Central and launches the application with the correct `--module-path` and `--add-modules` flags.
 
-- **JDK 17+ with `jpackage`** (tested with JDK 25). `JAVA_HOME` must point to the JDK install folder. Example: `setx JAVA_HOME "C:\Program Files\Java\jdk-25"`
-- **Apache Maven 3.6+** on `PATH`
-- **WiX Toolset 5+** with the Util and UI extensions, installed via the .NET CLI:
+Prerequisites:
 
-  ```cmd
-  dotnet tool install --global wix --version 5.0.2
-  wix extension add -g WixToolset.Util.wixext/5.0.0
-  wix extension add -g WixToolset.UI.wixext/5.0.0
-  ```
+- **JDK or JRE 17+** installed (must be on `PATH` so `java` is callable, or `JAVA_HOME` set)
+- **Apache Maven 3.6+** on `PATH` (only needed for the initial build)
+- Internet connection on the **first build only** (Maven downloads JavaFX 21, ~50 MB)
 
-  (.NET SDK 8.0+ is needed for `dotnet tool install`; download from <https://dotnet.microsoft.com/download> if missing.)
-
-Then from the project root:
+Steps:
 
 ```cmd
-build-installer.bat
+git clone https://github.com/efecaliskan1/ce216-project.git
+cd ce216-project
+mvn clean package
+run.bat
 ```
 
-The script does three things:
+`run.bat` does two things:
 
-1. `mvn clean package` — builds the application JAR
-2. `mvn dependency:copy-dependencies` — stages JavaFX jars into `target/deps`
-3. `jpackage` — produces the `.msi` using a jlinked runtime image that includes the JavaFX modules (`controls`, `fxml`, `graphics`)
+1. On first run, calls `mvn dependency:copy-dependencies` to stage the JavaFX jars into `target/deps`
+2. Launches the application JAR with `--module-path "target/deps"` and `--add-modules javafx.controls,javafx.fxml,javafx.graphics`
 
-The resulting `.msi` lands in `dist/` (~36 MB) and bundles its own Java runtime plus the JavaFX modules, so the target machine does not need a JDK. **Tested on Windows 11 (64-bit).**
+No external installer or `.exe` is produced — the launcher relies on the JDK/JRE that is already installed on the machine. JavaFX libraries are defined in `pom.xml` and pulled by Maven.
 
-See `setup.txt` for the full prerequisite list and troubleshooting notes.
+See `setup.txt` for a one-page walkthrough.
 
 ## Project structure
 
